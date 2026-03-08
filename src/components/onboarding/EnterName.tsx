@@ -1,11 +1,10 @@
-import { useOnboardingStore } from "#/store/useOnboardingStore";
+import { useUserStore } from "#/store/useUserStore";
 import ButtonNavigation, {
   type ButtonNavigationInterface,
 } from "./ButtonNavigation";
 
 const EnterName = ({ next, back }: ButtonNavigationInterface) => {
-  const { firstName, lastName, setFirstName, setLastName } =
-    useOnboardingStore();
+  const { firstName, lastName, setFirstName, setLastName } = useUserStore();
 
   return (
     <div className="max-w-lg mx-auto flex flex-col items-center gap-5">

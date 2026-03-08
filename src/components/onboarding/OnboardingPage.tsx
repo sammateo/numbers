@@ -1,7 +1,10 @@
-import { useMachine } from "@xstate/react";
 import { onboardingMachine } from "@/machines/onboardingMachine";
-import EnterName from "./EnterName";
+import { useMachine } from "@xstate/react";
 import ChooseUsername from "./ChooseUsername";
+import EnterName from "./EnterName";
+import ReviewDetails from "./ReviewDetails";
+import Submitting from "./Submitting";
+import Completed from "./Completed";
 
 const OnboardingPage = () => {
   const [state, send] = useMachine(onboardingMachine);
@@ -35,53 +38,50 @@ const OnboardingPage = () => {
       />
     );
   }
-  if (state.matches("chooseAvatar")) {
-    return (
-      <div>
-        <p>choose avatar</p>
-        <button
-          onClick={() => {
-            send({ type: "BACK" });
-          }}
-        >
-          back
-        </button>
-        <button
-          onClick={() => {
-            send({ type: "NEXT" });
-          }}
-        >
-          next
-        </button>
-      </div>
-    );
-  }
+  // if (state.matches("chooseAvatar")) {
+  //   return (
+  //     <div>
+  //       <p>choose avatar</p>
+  //       <button
+  //         onClick={() => {
+  //           send({ type: "BACK" });
+  //         }}
+  //       >
+  //         back
+  //       </button>
+  //       <button
+  //         onClick={() => {
+  //           send({ type: "NEXT" });
+  //         }}
+  //       >
+  //         next
+  //       </button>
+  //     </div>
+  //   );
+  // }
   if (state.matches("review")) {
     return (
-      <div>
-        <p>review details</p>
-        <button
-          onClick={() => {
+      <ReviewDetails
+        back={{
+          label: "Back",
+          action: () => {
             send({ type: "BACK" });
-          }}
-        >
-          back
-        </button>
-        <button
-          onClick={() => {
+          },
+        }}
+        next={{
+          label: "Submit",
+          action: () => {
             send({ type: "SUBMIT" });
-          }}
-        >
-          submit
-        </button>
-      </div>
+          },
+        }}
+      />
     );
   }
   if (state.matches("submitting")) {
-    return <div>submitting...</div>;
+    return <Submitting />;
   }
   if (state.matches("complete")) {
-    return <div>completed</div>;
+    return <Completed />;
   }
   return null;
 };

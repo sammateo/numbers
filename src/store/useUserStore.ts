@@ -14,7 +14,7 @@ type OnboardingState = {
   reset: () => void;
 };
 
-export const useOnboardingStore = create<OnboardingState>((set) => ({
+export const useUserStore = create<OnboardingState>((set) => ({
   firstName: "",
   lastName: "",
   username: "",

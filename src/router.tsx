@@ -1,13 +1,9 @@
+import type { User } from "@supabase/supabase-js";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import { supabase } from "./auth/supabase";
-import type { Session, User } from "@supabase/supabase-js";
-// import type { SupabaseClient } from "@supabase/supabase-js";
 
 export interface RouterContext {
-  // supabase: SupabaseClient;
   auth: {
-    session: Session;
     user: User;
     isAuthenticated: boolean;
   };
@@ -19,9 +15,8 @@ export function getRouter() {
     context: {
       // supabase,
       auth: {
-        isLoggedIn: false,
-        session: null,
-        user: null,
+        isAuthenticated: false,
+        user: undefined!,
       },
     },
     scrollRestoration: true,

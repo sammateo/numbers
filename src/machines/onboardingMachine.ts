@@ -1,5 +1,5 @@
 import { submitProfile } from "#/server/account/submitAccountDetails";
-import { useOnboardingStore } from "#/store/useOnboardingStore";
+import { useUserStore } from "#/store/useUserStore";
 import { fromPromise, setup } from "xstate";
 
 export const onboardingMachine = setup({
@@ -7,7 +7,7 @@ export const onboardingMachine = setup({
   actors: {
     submitProfile: fromPromise(async () => {
       const { firstName, lastName, username, avatarUrl } =
-        useOnboardingStore.getState();
+        useUserStore.getState();
 
       const response = await submitProfile({
         data: {
@@ -32,21 +32,21 @@ export const onboardingMachine = setup({
 
     chooseUsername: {
       on: {
-        NEXT: "chooseAvatar",
+        NEXT: "review",
         BACK: "enterName",
       },
     },
 
-    chooseAvatar: {
-      on: {
-        NEXT: "review",
-        BACK: "chooseUsername",
-      },
-    },
+    // chooseAvatar: {
+    //   on: {
+    //     NEXT: "review",
+    //     BACK: "chooseUsername",
+    //   },
+    // },
 
     review: {
       on: {
-        BACK: "chooseAvatar",
+        BACK: "chooseUsername",
         SUBMIT: "submitting",
       },
     },

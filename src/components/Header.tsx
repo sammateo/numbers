@@ -5,7 +5,6 @@ import { useServerFn } from "@tanstack/react-start";
 export default function Header() {
   const triggerLogin = useServerFn(login);
   const triggerLogout = useServerFn(logout);
-  // const { isAuthenticated } = useSupabaseAuth();
   const { isAuthenticated } = useRouteContext({ strict: false });
 
   const router = useRouter();

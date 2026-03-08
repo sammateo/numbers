@@ -17,7 +17,9 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as StudyNewRouteImport } from './routes/study/new'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
+import { Route as AuthedTestRouteImport } from './routes/_authed/test'
 import { Route as AuthedOnboardingRouteImport } from './routes/_authed/onboarding'
+import { Route as AuthedStudyIndexRouteImport } from './routes/_authed/study/index'
 
 const RssDotxmlRoute = RssDotxmlRouteImport.update({
   id: '/rss.xml',
@@ -58,9 +60,19 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedTestRoute = AuthedTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedOnboardingRoute = AuthedOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedStudyIndexRoute = AuthedStudyIndexRouteImport.update({
+  id: '/study/',
+  path: '/study/',
   getParentRoute: () => AuthedRoute,
 } as any)
 
@@ -69,20 +81,24 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/onboarding': typeof AuthedOnboardingRoute
+  '/test': typeof AuthedTestRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/study/new': typeof StudyNewRoute
   '/blog/': typeof BlogIndexRoute
+  '/study/': typeof AuthedStudyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/onboarding': typeof AuthedOnboardingRoute
+  '/test': typeof AuthedTestRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/study/new': typeof StudyNewRoute
   '/blog': typeof BlogIndexRoute
+  '/study': typeof AuthedStudyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -91,10 +107,12 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/_authed/onboarding': typeof AuthedOnboardingRoute
+  '/_authed/test': typeof AuthedTestRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/study/new': typeof StudyNewRoute
   '/blog/': typeof BlogIndexRoute
+  '/_authed/study/': typeof AuthedStudyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -103,20 +121,24 @@ export interface FileRouteTypes {
     | '/about'
     | '/rss.xml'
     | '/onboarding'
+    | '/test'
     | '/auth/callback'
     | '/blog/$slug'
     | '/study/new'
     | '/blog/'
+    | '/study/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/rss.xml'
     | '/onboarding'
+    | '/test'
     | '/auth/callback'
     | '/blog/$slug'
     | '/study/new'
     | '/blog'
+    | '/study'
   id:
     | '__root__'
     | '/'
@@ -124,10 +146,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/rss.xml'
     | '/_authed/onboarding'
+    | '/_authed/test'
     | '/auth/callback'
     | '/blog/$slug'
     | '/study/new'
     | '/blog/'
+    | '/_authed/study/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -199,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/test': {
+      id: '/_authed/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof AuthedTestRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/onboarding': {
       id: '/_authed/onboarding'
       path: '/onboarding'
@@ -206,15 +237,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedOnboardingRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/study/': {
+      id: '/_authed/study/'
+      path: '/study'
+      fullPath: '/study/'
+      preLoaderRoute: typeof AuthedStudyIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
   }
 }
 
 interface AuthedRouteChildren {
   AuthedOnboardingRoute: typeof AuthedOnboardingRoute
+  AuthedTestRoute: typeof AuthedTestRoute
+  AuthedStudyIndexRoute: typeof AuthedStudyIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedOnboardingRoute: AuthedOnboardingRoute,
+  AuthedTestRoute: AuthedTestRoute,
+  AuthedStudyIndexRoute: AuthedStudyIndexRoute,
 }
 
 const AuthedRouteWithChildren =

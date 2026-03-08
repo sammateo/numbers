@@ -1,4 +1,5 @@
 import { getSupabaseServerClient } from "#/lib/supabase";
+import { getUserProfile } from "#/server/account/getUserProfile";
 import { createClient, type User } from "@supabase/supabase-js";
 import { redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
@@ -90,16 +91,17 @@ export function useSupabaseAuth() {
 
 export const getUserSessionFn = createServerFn().handler(async () => {
   const supabase = getSupabaseServerClient();
-  const { data: session, error: sessionError } =
-    await supabase.auth.getSession();
-  if (sessionError) throw new Error(sessionError.message);
-  //   const { data: user, error } = await supabase.auth.getUser();
-  //   if (error) throw new Error(error.message);
+  const { data: user, error } = await supabase.auth.getUser();
+  if (error) throw new Error(error.message);
+  const profile = await getUserProfile({
+    data: {
+      id: user.user.id,
+    },
+  });
 
   return {
-    session: session.session,
-    user: session.session?.user,
-    isAuthenticated: !!session.session?.user,
+    user: { ...user.user, username: profile?.username },
+    isAuthenticated: !!user?.user,
   };
 });
 

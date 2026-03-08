@@ -1,3 +1,6 @@
+import { getUserSessionFn } from "#/auth/supabase";
+import { getSupabaseServerClient } from "#/lib/supabase";
+import type { ProfileUpdate } from "#/types";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
@@ -16,7 +19,24 @@ const ProfileSchema = z.object({
 export const submitProfile = createServerFn()
   .inputValidator(ProfileSchema)
   .handler(async ({ data }) => {
-    return `Created user: ${data.username}`;
+    const supabase = getSupabaseServerClient();
+    const { user } = await getUserSessionFn();
+    const updateObject: ProfileUpdate = {
+      first_name: data.firstName,
+      last_name: data.lastName,
+      username: data.username,
+    };
+    const { data: profileUpdate, error } = await supabase
+      .schema("numbers")
+      .from("profiles")
+      .update(updateObject)
+      .eq("id", user.id)
+      .select();
+    if (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
+    return `Updated user: ${data.username}`;
   });
 
 // // Call from anywhere - components, loaders, hooks, etc.
