@@ -1,16 +1,13 @@
-import { useUserStore } from "#/store/useUserStore";
+import BibleStudyPage from "#/components/study/BibleStudyPage";
+import { getBibleStudies } from "#/server/bible_study/getBibleStudies";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authed/study/")({
-  component: RouteComponent,
+  component: BibleStudyPage,
+  loader: async ({ context }) =>
+    await getBibleStudies({
+      data: {
+        creator_id: context.user?.id || "",
+      },
+    }),
 });
-
-function RouteComponent() {
-  const username = useUserStore((s) => s.username);
-  return (
-    <div>
-      <h1>Your Studies</h1>
-      <p>Hi {username}</p>
-    </div>
-  );
-}

@@ -26,7 +26,7 @@ export const submitProfile = createServerFn()
       last_name: data.lastName,
       username: data.username,
     };
-    const { data: profileUpdate, error } = await supabase
+    const { data: _, error } = await supabase
       .schema("numbers")
       .from("profiles")
       .update(updateObject)

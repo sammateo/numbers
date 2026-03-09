@@ -14,12 +14,13 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
-import { Route as StudyNewRouteImport } from './routes/study/new'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as AuthedTestRouteImport } from './routes/_authed/test'
 import { Route as AuthedOnboardingRouteImport } from './routes/_authed/onboarding'
 import { Route as AuthedStudyIndexRouteImport } from './routes/_authed/study/index'
+import { Route as AuthedStudyNewRouteImport } from './routes/_authed/study/new'
+import { Route as AuthedStudyStudyIdRouteImport } from './routes/_authed/study/$studyId'
 
 const RssDotxmlRoute = RssDotxmlRouteImport.update({
   id: '/rss.xml',
@@ -43,11 +44,6 @@ const IndexRoute = IndexRouteImport.update({
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StudyNewRoute = StudyNewRouteImport.update({
-  id: '/study/new',
-  path: '/study/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
@@ -75,6 +71,16 @@ const AuthedStudyIndexRoute = AuthedStudyIndexRouteImport.update({
   path: '/study/',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedStudyNewRoute = AuthedStudyNewRouteImport.update({
+  id: '/study/new',
+  path: '/study/new',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedStudyStudyIdRoute = AuthedStudyStudyIdRouteImport.update({
+  id: '/study/$studyId',
+  path: '/study/$studyId',
+  getParentRoute: () => AuthedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -84,8 +90,9 @@ export interface FileRoutesByFullPath {
   '/test': typeof AuthedTestRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/study/new': typeof StudyNewRoute
   '/blog/': typeof BlogIndexRoute
+  '/study/$studyId': typeof AuthedStudyStudyIdRoute
+  '/study/new': typeof AuthedStudyNewRoute
   '/study/': typeof AuthedStudyIndexRoute
 }
 export interface FileRoutesByTo {
@@ -96,8 +103,9 @@ export interface FileRoutesByTo {
   '/test': typeof AuthedTestRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/study/new': typeof StudyNewRoute
   '/blog': typeof BlogIndexRoute
+  '/study/$studyId': typeof AuthedStudyStudyIdRoute
+  '/study/new': typeof AuthedStudyNewRoute
   '/study': typeof AuthedStudyIndexRoute
 }
 export interface FileRoutesById {
@@ -110,8 +118,9 @@ export interface FileRoutesById {
   '/_authed/test': typeof AuthedTestRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
-  '/study/new': typeof StudyNewRoute
   '/blog/': typeof BlogIndexRoute
+  '/_authed/study/$studyId': typeof AuthedStudyStudyIdRoute
+  '/_authed/study/new': typeof AuthedStudyNewRoute
   '/_authed/study/': typeof AuthedStudyIndexRoute
 }
 export interface FileRouteTypes {
@@ -124,8 +133,9 @@ export interface FileRouteTypes {
     | '/test'
     | '/auth/callback'
     | '/blog/$slug'
-    | '/study/new'
     | '/blog/'
+    | '/study/$studyId'
+    | '/study/new'
     | '/study/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -136,8 +146,9 @@ export interface FileRouteTypes {
     | '/test'
     | '/auth/callback'
     | '/blog/$slug'
-    | '/study/new'
     | '/blog'
+    | '/study/$studyId'
+    | '/study/new'
     | '/study'
   id:
     | '__root__'
@@ -149,8 +160,9 @@ export interface FileRouteTypes {
     | '/_authed/test'
     | '/auth/callback'
     | '/blog/$slug'
-    | '/study/new'
     | '/blog/'
+    | '/_authed/study/$studyId'
+    | '/_authed/study/new'
     | '/_authed/study/'
   fileRoutesById: FileRoutesById
 }
@@ -161,7 +173,6 @@ export interface RootRouteChildren {
   RssDotxmlRoute: typeof RssDotxmlRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   BlogSlugRoute: typeof BlogSlugRoute
-  StudyNewRoute: typeof StudyNewRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
@@ -202,13 +213,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/study/new': {
-      id: '/study/new'
-      path: '/study/new'
-      fullPath: '/study/new'
-      preLoaderRoute: typeof StudyNewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -244,18 +248,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedStudyIndexRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/study/new': {
+      id: '/_authed/study/new'
+      path: '/study/new'
+      fullPath: '/study/new'
+      preLoaderRoute: typeof AuthedStudyNewRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/study/$studyId': {
+      id: '/_authed/study/$studyId'
+      path: '/study/$studyId'
+      fullPath: '/study/$studyId'
+      preLoaderRoute: typeof AuthedStudyStudyIdRouteImport
+      parentRoute: typeof AuthedRoute
+    }
   }
 }
 
 interface AuthedRouteChildren {
   AuthedOnboardingRoute: typeof AuthedOnboardingRoute
   AuthedTestRoute: typeof AuthedTestRoute
+  AuthedStudyStudyIdRoute: typeof AuthedStudyStudyIdRoute
+  AuthedStudyNewRoute: typeof AuthedStudyNewRoute
   AuthedStudyIndexRoute: typeof AuthedStudyIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedOnboardingRoute: AuthedOnboardingRoute,
   AuthedTestRoute: AuthedTestRoute,
+  AuthedStudyStudyIdRoute: AuthedStudyStudyIdRoute,
+  AuthedStudyNewRoute: AuthedStudyNewRoute,
   AuthedStudyIndexRoute: AuthedStudyIndexRoute,
 }
 
@@ -269,7 +291,6 @@ const rootRouteChildren: RootRouteChildren = {
   RssDotxmlRoute: RssDotxmlRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   BlogSlugRoute: BlogSlugRoute,
-  StudyNewRoute: StudyNewRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
