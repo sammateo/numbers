@@ -107,7 +107,6 @@ export const getUserSessionFn = createServerFn().handler(async () => {
 
 export const login = createServerFn().handler(async () => {
   const supabase = getSupabaseServerClient();
-  console.log("inside the login");
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
@@ -121,7 +120,6 @@ export const login = createServerFn().handler(async () => {
 });
 export const logout = createServerFn().handler(async () => {
   const supabase = getSupabaseServerClient();
-  console.log("inside the logout");
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 });

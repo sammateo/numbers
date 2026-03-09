@@ -30,6 +30,10 @@ body {
 hr {
   background-color: gray;
 }
+.nav-link {
+  padding: 5px 10px;
+  border-radius: 5px;
+}
 .is-active {
   background-color: rgb(230, 230, 230);
 }

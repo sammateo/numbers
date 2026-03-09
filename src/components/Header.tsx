@@ -31,11 +31,11 @@ export default function Header() {
             Home
           </Link>
           <Link
-            to="/blog"
+            to="/study"
             className="nav-link"
             activeProps={{ className: "nav-link is-active" }}
           >
-            Blog
+            Bible Studies
           </Link>
           <Link
             to="/about"

@@ -10,17 +10,27 @@ import "#/components/tiptap-node/paragraph-node/paragraph-node.scss";
 import "#/components/tiptap-templates/simple/simple-editor.scss";
 
 import { TextStyleKit } from "@tiptap/extension-text-style";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, useEditor, type JSONContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 
 import { MenuBar } from "./MenuBar.tsx";
+import type { RichTextContent } from "#/types/index.ts";
 
 const extensions = [TextStyleKit, StarterKit];
 
-export default () => {
+export default ({
+  disabled = true,
+  content,
+  setContent,
+}: {
+  disabled?: boolean;
+  content: RichTextContent;
+  setContent?: (content: RichTextContent) => void;
+}) => {
   const editor = useEditor({
+    editable: !disabled,
     extensions,
-    content: {
+    content: (content as JSONContent) || {
       type: "doc",
       content: [
         {
@@ -31,42 +41,22 @@ export default () => {
           content: [
             {
               type: "text",
-              text: "Hi there,",
+              text: "Bible Study Topic",
             },
           ],
         },
         {
-          type: "paragraph",
+          type: "horizontalRule",
+        },
+        {
+          type: "heading",
+          attrs: {
+            level: 4,
+          },
           content: [
             {
               type: "text",
-              text: "this is a ",
-            },
-            {
-              type: "text",
-              marks: [
-                {
-                  type: "italic",
-                },
-              ],
-              text: "basic",
-            },
-            {
-              type: "text",
-              text: " example of ",
-            },
-            {
-              type: "text",
-              marks: [
-                {
-                  type: "bold",
-                },
-              ],
-              text: "Tiptap",
-            },
-            {
-              type: "text",
-              text: ". Sure, there are all kind of basic text styles you'd probably expect from a text editor. But wait until you see the lists:",
+              text: "Bible Study Subtopic",
             },
           ],
         },
@@ -81,7 +71,26 @@ export default () => {
                   content: [
                     {
                       type: "text",
-                      text: "That's a bullet list with one …",
+                      text: "point 1",
+                    },
+                  ],
+                },
+                {
+                  type: "bulletList",
+                  content: [
+                    {
+                      type: "listItem",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "book chapter:verse",
+                            },
+                          ],
+                        },
+                      ],
                     },
                   ],
                 },
@@ -95,41 +104,30 @@ export default () => {
                   content: [
                     {
                       type: "text",
-                      text: "… or two list items.",
+                      text: "point 2",
+                    },
+                  ],
+                },
+                {
+                  type: "bulletList",
+                  content: [
+                    {
+                      type: "listItem",
+                      content: [
+                        {
+                          type: "paragraph",
+                          content: [
+                            {
+                              type: "text",
+                              text: "book chapter:verse",
+                            },
+                          ],
+                        },
+                      ],
                     },
                   ],
                 },
               ],
-            },
-          ],
-        },
-        {
-          type: "paragraph",
-          content: [
-            {
-              type: "text",
-              text: "Isn't that great? And all of that is editable. But wait, there's more. Let's try a code block:",
-            },
-          ],
-        },
-        {
-          type: "codeBlock",
-          attrs: {
-            language: "css",
-          },
-          content: [
-            {
-              type: "text",
-              text: "body {\n  display: none;\n}",
-            },
-          ],
-        },
-        {
-          type: "paragraph",
-          content: [
-            {
-              type: "text",
-              text: "I know, I know, this is impressive. It's only the tip of the iceberg though. Give it a try and click a little bit around. Don't forget to check the other examples too.",
             },
           ],
         },
@@ -141,32 +139,29 @@ export default () => {
               content: [
                 {
                   type: "text",
-                  text: "Wow, that's amazing. Good work, boy! 👏 ",
-                },
-                {
-                  type: "hardBreak",
-                },
-                {
-                  type: "text",
-                  text: "— Mom",
+                  text: "Key point",
                 },
               ],
             },
           ],
         },
+        {
+          type: "paragraph",
+        },
       ],
     },
   });
-  const getContent = () => {
-    const stuff = editor.getJSON();
-    console.log(stuff);
-  };
+
+  editor.on("update", ({ editor }) => {
+    if (setContent) setContent(editor.getJSON());
+  });
 
   return (
-    <div className="mx-10 my-10 border-2 border-gray-300 px-5 py-5 rounded-md">
-      <MenuBar editor={editor} />
+    <div
+      className={`mx-8 my-10 border-2 ${disabled ? "border-transparent" : "border-gray-300"} px-5 py-5 rounded-md`}
+    >
+      {!disabled && <MenuBar editor={editor} />}
       <EditorContent className="py-4 px-4" editor={editor} />
-      <button onClick={getContent}>click</button>
     </div>
   );
 };

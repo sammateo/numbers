@@ -6,7 +6,7 @@ const Card = ({ id, title, topic, visibility, created_at }: BibleStudy) => {
     <article className="rounded-[10px] border border-gray-200 bg-white px-4 pt-12 pb-4 w-full">
       <time dateTime="2022-10-10" className="block text-xs text-gray-500">
         {" "}
-        {new Date(created_at).toLocaleDateString()}{" "}
+        {new Date(created_at).toDateString()}{" "}
       </time>
 
       <Link to="/study/$studyId" params={{ studyId: id }}>
@@ -18,9 +18,11 @@ const Card = ({ id, title, topic, visibility, created_at }: BibleStudy) => {
           {visibility}
         </span>
 
-        <span className="rounded-full bg-purple-100 px-2.5 py-0.5 text-xs whitespace-nowrap text-purple-600">
-          {topic}
-        </span>
+        {topic && (
+          <span className="rounded-full bg-purple-100 px-2.5 py-0.5 text-xs whitespace-nowrap text-purple-600">
+            {topic}
+          </span>
+        )}
       </div>
     </article>
   );

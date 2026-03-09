@@ -7,7 +7,6 @@ export const Route = createFileRoute("/auth/callback")({
       GET: async ({ request }) => {
         const url = new URL(request.url);
         const code = url.searchParams.get("code");
-        console.log(code);
         const supabase = getSupabaseServerClient();
         if (code) {
           try {

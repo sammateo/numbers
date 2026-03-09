@@ -5,7 +5,6 @@ import Card from "./Card";
 const BibleStudyPage = () => {
   const routeApi = getRouteApi("/_authed/study/");
   const data = routeApi.useLoaderData();
-  console.log(data);
   return (
     <div className="py-8 max-w-2xl mx-auto flex flex-col items-stretch gap-5">
       <div className="mx-auto max-w-lg text-center mb-10">

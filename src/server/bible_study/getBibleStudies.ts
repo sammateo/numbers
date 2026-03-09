@@ -16,11 +16,11 @@ export const getBibleStudies = createServerFn()
       .from("bible_studies")
       .select("*")
       .eq("creator_id", data.creator_id)
+      .order("created_at", { ascending: false })
       .overrideTypes<Array<BibleStudy>>();
     if (error) {
       console.error(error);
       throw new Error(error.message);
     }
-    console.log(bible_studies);
     return bible_studies;
   });
