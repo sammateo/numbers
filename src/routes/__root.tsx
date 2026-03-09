@@ -55,6 +55,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       return { user: null, isAuthenticated: false };
     }
   },
+  pendingComponent: () => <div>loading...</div>,
+  notFoundComponent: () => <div>404 Not Found</div>,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {

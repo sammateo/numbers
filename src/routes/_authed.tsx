@@ -2,6 +2,7 @@ import { getUserSessionFn } from "#/auth/supabase";
 import { getUserProfile } from "#/server/account/getUserProfile";
 import { createFileRoute, isRedirect, redirect } from "@tanstack/react-router";
 export const Route = createFileRoute("/_authed")({
+  // pendingComponent: () => <div>loading...</div>,
   beforeLoad: async ({ location }) => {
     try {
       const { isAuthenticated, user } = await getUserSessionFn();
