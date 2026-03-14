@@ -11,4 +11,5 @@ export const Route = createFileRoute("/_authed/study/$studyId")({
       },
     });
   },
+  pendingComponent: () => <div>Loading Study...</div>,
 });
