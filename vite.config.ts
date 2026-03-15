@@ -18,16 +18,17 @@ const config = defineConfig({
     tsconfigPaths({ projects: ["./tsconfig.json"] }),
     tailwindcss(),
     cloudflare({ viteEnvironment: { name: "ssr" } }),
-    tanstackStart({
-      prerender: {
-        enabled: true,
-        crawlLinks: true,
-      },
-      sitemap: {
-        enabled: true,
-        host: "https://numbers.memedev.win/",
-      },
-    }),
+    tanstackStart(),
+    //   {
+    //   prerender: {
+    //     enabled: true,
+    //     crawlLinks: true,
+    //   },
+    //   sitemap: {
+    //     enabled: true,
+    //     host: "https://numbers.memedev.win/",
+    //   },
+    // }
     viteReact(),
   ],
 });
