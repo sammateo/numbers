@@ -16,9 +16,11 @@ const BibleStudyPage = () => {
         Back to studies
       </Link>
       <header className="space-y-2">
-        <div className="inline-block px-3 py-1 bg-accent/90 text-accent-foreground rounded text-xs md:text-sm">
-          {bibleStudy?.topic}
-        </div>
+        {bibleStudy?.topic && (
+          <div className="inline-block px-3 py-1 bg-accent/90 text-accent-foreground rounded text-xs md:text-sm">
+            {bibleStudy?.topic}
+          </div>
+        )}
         <h1 className="text-3xl md:text-4xl leading-tight">
           {bibleStudy?.title}
         </h1>

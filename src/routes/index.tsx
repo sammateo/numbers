@@ -1,4 +1,5 @@
 import { Landing } from "#/components/landing/Landing";
+import Loading from "#/components/utility/Loading";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -8,6 +9,7 @@ export const Route = createFileRoute("/")({
     }
   },
   component: Landing,
+  pendingComponent: Loading,
 });
 
 export function App() {
