@@ -1,3 +1,4 @@
+import { Landing } from "#/components/landing/Landing";
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -6,7 +7,7 @@ export const Route = createFileRoute("/")({
       throw redirect({ to: "/study" });
     }
   },
-  component: App,
+  component: Landing,
 });
 
 function App() {

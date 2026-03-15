@@ -1,11 +1,13 @@
 import type { User } from "@supabase/supabase-js";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
+import type { Profile } from "./types";
 
 export interface RouterContext {
   auth: {
     user: User;
     isAuthenticated: boolean;
+    profile: Profile;
   };
 }
 
@@ -17,6 +19,7 @@ export function getRouter() {
       auth: {
         isAuthenticated: false,
         user: undefined!,
+        profile: undefined!,
       },
     },
     scrollRestoration: true,

@@ -17,6 +17,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as AuthedTestRouteImport } from './routes/_authed/test'
+import { Route as AuthedProfileRouteImport } from './routes/_authed/profile'
 import { Route as AuthedOnboardingRouteImport } from './routes/_authed/onboarding'
 import { Route as AuthedStudyIndexRouteImport } from './routes/_authed/study/index'
 import { Route as AuthedStudyNewRouteImport } from './routes/_authed/study/new'
@@ -61,6 +62,11 @@ const AuthedTestRoute = AuthedTestRouteImport.update({
   path: '/test',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedProfileRoute = AuthedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedOnboardingRoute = AuthedOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/onboarding': typeof AuthedOnboardingRoute
+  '/profile': typeof AuthedProfileRoute
   '/test': typeof AuthedTestRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/onboarding': typeof AuthedOnboardingRoute
+  '/profile': typeof AuthedProfileRoute
   '/test': typeof AuthedTestRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/_authed/onboarding': typeof AuthedOnboardingRoute
+  '/_authed/profile': typeof AuthedProfileRoute
   '/_authed/test': typeof AuthedTestRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/rss.xml'
     | '/onboarding'
+    | '/profile'
     | '/test'
     | '/auth/callback'
     | '/blog/$slug'
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/rss.xml'
     | '/onboarding'
+    | '/profile'
     | '/test'
     | '/auth/callback'
     | '/blog/$slug'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/rss.xml'
     | '/_authed/onboarding'
+    | '/_authed/profile'
     | '/_authed/test'
     | '/auth/callback'
     | '/blog/$slug'
@@ -234,6 +246,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedTestRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/profile': {
+      id: '/_authed/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthedProfileRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/onboarding': {
       id: '/_authed/onboarding'
       path: '/onboarding'
@@ -267,6 +286,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthedRouteChildren {
   AuthedOnboardingRoute: typeof AuthedOnboardingRoute
+  AuthedProfileRoute: typeof AuthedProfileRoute
   AuthedTestRoute: typeof AuthedTestRoute
   AuthedStudyStudyIdRoute: typeof AuthedStudyStudyIdRoute
   AuthedStudyNewRoute: typeof AuthedStudyNewRoute
@@ -275,6 +295,7 @@ interface AuthedRouteChildren {
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedOnboardingRoute: AuthedOnboardingRoute,
+  AuthedProfileRoute: AuthedProfileRoute,
   AuthedTestRoute: AuthedTestRoute,
   AuthedStudyStudyIdRoute: AuthedStudyStudyIdRoute,
   AuthedStudyNewRoute: AuthedStudyNewRoute,

@@ -1,5 +1,4 @@
 import type {
-  BibleStudyCollaborator,
   BibleStudyMedia,
   BibleStudyVerse,
   FullBibleStudyCollaborator,
