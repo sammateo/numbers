@@ -33,11 +33,39 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       {
         title: "#Numbers",
       },
+      {
+        name: "apple-mobile-web-app-title",
+        content: "#Numbers",
+      },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "96x96",
+        href: "/favicon-96x96.png",
+      },
+      {
+        rel: "icon",
+        type: "image/svg+xml",
+        href: "/favicon.svg",
+      },
+      {
+        rel: "shortcut icon",
+        href: "/favicon.ico",
+      },
+      {
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: "/apple-touch-icon.png",
+      },
+      {
+        rel: "manifest",
+        href: "/site.webmanifest",
       },
     ],
   }),
@@ -91,6 +119,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         {/* <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} /> */}
         <HeadContent />
+        {/* <link
+          rel="icon"
+          type="image/png"
+          href="/favicon-96x96.png"
+          sizes="96x96"
+        /> */}
+        {/* <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> */}
+        {/* <link rel="shortcut icon" href="/favicon.ico" /> */}
+        {/* <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        /> */}
+        {/* <meta name="apple-mobile-web-app-title" content="#Numbers" /> */}
+        {/* <link rel="manifest" href="/site.webmanifest" /> */}
       </head>
       <body className="font-sans antialiased w-screen wrap-anywhere selection:bg-[rgba(79,184,178,0.24)] flex bg-background">
         {/* <SupabaseAuthProvider> */}
