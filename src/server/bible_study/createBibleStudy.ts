@@ -35,7 +35,7 @@ const CreateBibleStudySchema = z.object({
   // id: z.string(),
   //   creator_id: z.string(),
   title: z.string(),
-  //   topic: z.string().nullable(),
+  topic: z.string().nullable(),
   description: z.string().nullable(),
   content: JsonSchema,
   visibility: z.union([
@@ -55,6 +55,7 @@ export const createBibleStudy = createServerFn()
     const insertObject: BibleStudyInsert = {
       creator_id: user.id,
       title: data.title,
+      topic: data.topic,
       description: data.description,
       content: data.content,
       visibility: data.visibility,

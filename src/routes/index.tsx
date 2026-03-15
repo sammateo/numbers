@@ -1,8 +1,18 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Landing } from "#/components/landing/Landing";
+import Loading from "#/components/utility/Loading";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/")({ component: App });
+export const Route = createFileRoute("/")({
+  beforeLoad: ({ context }) => {
+    if (context.isAuthenticated) {
+      throw redirect({ to: "/study" });
+    }
+  },
+  component: Landing,
+  pendingComponent: Loading,
+});
 
-function App() {
+export function App() {
   return (
     <main>
       <section className="bg-white lg:grid lg:h-screen lg:place-content-center">

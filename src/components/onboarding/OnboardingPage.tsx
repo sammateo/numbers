@@ -7,6 +7,14 @@ import Submitting from "./Submitting";
 import Completed from "./Completed";
 
 const OnboardingPage = () => {
+  return (
+    <div className="max-w-4xl mx-auto flex flex-col items-center gap-5 p-4 md:p-6 lg:p-8">
+      <OnboardingPageContent />
+    </div>
+  );
+};
+
+const OnboardingPageContent = () => {
   const [state, send] = useMachine(onboardingMachine);
   if (state.matches("enterName")) {
     return (

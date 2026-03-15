@@ -5,11 +5,12 @@ import { fromPromise, setup } from "xstate";
 export const createBibleStudyMachine = setup({
   actors: {
     submitBibleStudy: fromPromise(async () => {
-      const { title, description, content, visibility } =
+      const { title, topic, description, content, visibility } =
         useCreateBibleStudyStore.getState();
       const response = await createBibleStudy({
         data: {
           title,
+          topic,
           description,
           content,
           visibility,

@@ -1,13 +1,21 @@
 import { Link } from "@tanstack/react-router";
+import OnboardingCard from "./OnboardingCard";
+import Button from "#/ui/button/Button";
+import { CircleCheck } from "lucide-react";
 
 const Completed = () => {
   return (
-    <div className="max-w-lg mx-auto flex flex-col items-center gap-5">
-      <div className="pt-4 text-center">
-        <h2 className="text-2xl font-semibold">Profile Update completed</h2>
-        <Link to="/study">View studies</Link>
-      </div>
-    </div>
+    <>
+      <OnboardingCard>
+        <div className="py-4 text-center text-primary items-center justify-center flex flex-col gap-5">
+          <CircleCheck className="size-14" />
+          <h2 className="text-2xl font-semibold">Profile Update completed</h2>
+          <Link to="/study">
+            <Button>View Studies</Button>
+          </Link>
+        </div>
+      </OnboardingCard>
+    </>
   );
 };
 

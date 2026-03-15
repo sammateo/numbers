@@ -1,3 +1,5 @@
+import Button from "#/ui/button/Button";
+
 export interface ButtonInterface {
   label: string;
   action: () => void;
@@ -11,12 +13,13 @@ export interface ButtonNavigationInterface {
 
 const ButtonNavigation = ({ next, back }: ButtonNavigationInterface) => {
   return (
-    <div className="flex flex-wrap gap-2 items-center justify-center">
+    <div className="flex flex-wrap gap-2 items-center justify-start">
       {back && (
-        <button
+        <Button
           disabled={back.disabled}
           onClick={back.action}
-          className="group relative inline-flex items-center overflow-hidden rounded-sm border border-current px-8 py-3 text-indigo-600"
+          variant="secondary"
+          className="group relative inline-flex items-center overflow-hidden border gap-2 px-8"
         >
           <span className="absolute -start-full transition-all group-hover:inset-s-4 group-disabled:-start-full">
             <svg
@@ -39,12 +42,12 @@ const ButtonNavigation = ({ next, back }: ButtonNavigationInterface) => {
             {" "}
             {back.label}{" "}
           </span>
-        </button>
+        </Button>
       )}
       {next && (
-        <button
+        <Button
           disabled={next.disabled}
-          className="group relative inline-flex items-center overflow-hidden rounded-sm bg-indigo-600 disabled:bg-gray-500 px-8 py-3 text-white"
+          className="group relative inline-flex items-center overflow-hidden gap-2 px-8"
           onClick={next.action}
         >
           <span className="absolute -start-full transition-all group-hover:inset-s-4 group-disabled:-start-full">
@@ -68,7 +71,7 @@ const ButtonNavigation = ({ next, back }: ButtonNavigationInterface) => {
             {" "}
             {next.label}{" "}
           </span>
-        </button>
+        </Button>
       )}
     </div>
   );

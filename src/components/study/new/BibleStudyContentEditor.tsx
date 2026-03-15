@@ -158,7 +158,7 @@ export default ({
 
   return (
     <div
-      className={`mx-8 my-10 border-2 ${disabled ? "border-transparent" : "border-gray-300"} px-5 py-5 rounded-md`}
+      className={`border ${disabled ? "border-transparent" : "border-gray-300"} pb-5 rounded-md`}
     >
       {!disabled && <MenuBar editor={editor} />}
       <EditorContent className="py-4 px-4" editor={editor} />

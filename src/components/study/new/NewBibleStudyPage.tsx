@@ -4,7 +4,6 @@ import EnterTitle from "./forms/EnterTitle";
 import EnterDescription from "./forms/EnterDescription";
 import EnterContent from "./forms/EnterContent";
 import ReviewContent from "./forms/ReviewContent";
-import { redirect } from "@tanstack/react-router";
 import { useCreateBibleStudyStore } from "#/store/useCreateBibleStudyStore";
 import Completed from "./forms/Completed";
 
