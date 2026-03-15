@@ -272,7 +272,7 @@ export function Landing() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Hash className="w-6 h-6 text-primary" />
-              <span className="text-primary">Scripture</span>
+              <span className="text-primary">Numbers</span>
             </div>
             {/* <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <a href="#" className="hover:text-foreground transition-colors">
@@ -289,7 +289,7 @@ export function Landing() {
               </a>
             </div> */}
             <div className="text-sm text-muted-foreground">
-              © 2026 Scripture. All rights reserved.
+              © 2026 Numbers. All rights reserved.
             </div>
           </div>
         </div>

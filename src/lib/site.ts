@@ -1,4 +1,3 @@
 export const SITE_TITLE = "Numbers";
-export const SITE_DESCRIPTION =
-  "A tropical, breathable app starter with full-document SSR, server functions, streaming, and type-safe routing.";
-export const SITE_URL = "https://example.com";
+export const SITE_DESCRIPTION = "Create and Share Bible Studies";
+export const SITE_URL = "https://numbers.memedev.win";

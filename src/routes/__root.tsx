@@ -37,6 +37,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         name: "apple-mobile-web-app-title",
         content: "#Numbers",
       },
+      { name: "description", content: "Create and Share Bible Studies" },
     ],
     links: [
       {
