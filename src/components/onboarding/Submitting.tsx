@@ -1,10 +1,16 @@
+import { LoaderCircle } from "lucide-react";
+import OnboardingCard from "./OnboardingCard";
+
 const Submitting = () => {
   return (
-    <div className="max-w-lg mx-auto flex flex-col items-center gap-5">
-      <div className="pt-4 text-center">
-        <h2 className="text-2xl font-semibold">Submitting</h2>
-      </div>
-    </div>
+    <>
+      <OnboardingCard>
+        <div className="py-4 text-center text-primary items-center flex flex-col gap-4">
+          <h2 className="text-2xl font-semibold">Submitting</h2>
+          <LoaderCircle className="animate-spin" />
+        </div>
+      </OnboardingCard>
+    </>
   );
 };
 

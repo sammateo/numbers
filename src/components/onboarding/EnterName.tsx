@@ -1,38 +1,51 @@
 import { useUserStore } from "#/store/useUserStore";
+import Input from "#/ui/input/Input";
+import { useRouteContext } from "@tanstack/react-router";
 import ButtonNavigation, {
   type ButtonNavigationInterface,
 } from "./ButtonNavigation";
+import OnboardingCard from "./OnboardingCard";
+import OnboardingTitle from "./OnboardingTitle";
 
 const EnterName = ({ next, back }: ButtonNavigationInterface) => {
   const { firstName, lastName, setFirstName, setLastName } = useUserStore();
+  const { profile } = useRouteContext({ from: "__root__" });
 
   return (
-    <div className="max-w-lg mx-auto flex flex-col items-center gap-5">
-      <label htmlFor="FirstName">
-        <span className="text-sm font-medium text-gray-700"> First Name </span>
-        <input
-          defaultValue={firstName}
-          onChange={(e) => {
-            setFirstName(e.target.value);
-          }}
-          type="text"
-          id="FirstName"
-          className="mt-0.5 px-2 py-2 outline-0 border-2 w-full rounded border-gray-300 shadow-sm sm:text-sm"
-        />
-      </label>
-      <label htmlFor="LastName">
-        <span className="text-sm font-medium text-gray-700"> Last Name </span>
-        <input
-          defaultValue={lastName}
-          onChange={(e) => {
-            setLastName(e.target.value);
-          }}
-          type="text"
-          id="LastName"
-          className="mt-0.5 px-2 py-2 outline-0 border-2 w-full rounded border-gray-300 shadow-sm sm:text-sm"
-        />
-      </label>
-      <div className="flex gap-2 items-center">
+    <>
+      <OnboardingTitle
+        title={profile && profile.username ? "Update your profile" : undefined}
+        description="Enter your name"
+      />
+      <OnboardingCard>
+        <div className="w-full space-y-2">
+          <label htmlFor="FirstName" className="block text-sm">
+            First Name
+          </label>
+          <Input
+            placeholder="Enter your first name"
+            defaultValue={firstName}
+            onChange={(e) => {
+              setFirstName(e.target.value);
+            }}
+            type="text"
+            id="FirstName"
+          />
+        </div>
+        <div className="w-full space-y-2">
+          <label htmlFor="LastName" className="block text-sm">
+            Last Name
+          </label>
+          <Input
+            placeholder="Enter your last name"
+            defaultValue={lastName}
+            onChange={(e) => {
+              setLastName(e.target.value);
+            }}
+            type="text"
+            id="LastName"
+          />
+        </div>
         <ButtonNavigation
           next={{
             ...next!,
@@ -40,8 +53,8 @@ const EnterName = ({ next, back }: ButtonNavigationInterface) => {
           }}
           back={back}
         />
-      </div>
-    </div>
+      </OnboardingCard>
+    </>
   );
 };
 

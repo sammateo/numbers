@@ -1,7 +1,14 @@
-import { getRouteApi, redirect, useRouteContext } from "@tanstack/react-router";
+import {
+  getRouteApi,
+  Link,
+  redirect,
+  useRouteContext,
+} from "@tanstack/react-router";
 import { CiCalendar } from "react-icons/ci";
 import { IoBookOutline } from "react-icons/io5";
 import NewCard from "../study/NewCard";
+import { Edit, SquareArrowOutUpRight } from "lucide-react";
+import Button from "#/ui/button/Button";
 
 const ProfilePage = () => {
   const { profile } = useRouteContext({ from: "__root__" });
@@ -45,11 +52,25 @@ const ProfilePage = () => {
               </div>
             </div>
           </div>
+          <Link
+            to="/onboarding"
+            className="bg-muted hover:bg-accent p-2 rounded flex items-center justify-center"
+          >
+            <Edit className="size-5 hover:text-primary" />
+          </Link>
         </div>
       </div>
 
       <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl">Recently Created Studies</h2>
+        <div className="flex justify-between">
+          <h2 className="text-xl md:text-2xl">Recently Created Studies</h2>
+          <Link to="/study">
+            <Button variant="secondary" className="flex gap-2 items-center">
+              <span>View More</span>
+              <SquareArrowOutUpRight className="size-4" />
+            </Button>
+          </Link>
+        </div>
         <div className="grid gap-4 md:gap-5">
           {bibleStudies &&
             bibleStudies
