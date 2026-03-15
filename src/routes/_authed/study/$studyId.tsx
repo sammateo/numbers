@@ -1,4 +1,5 @@
 import BibleStudyPage from "#/components/study/BibleStudyPage";
+import Loading from "#/components/utility/Loading";
 import { getCompleteBibleStudy } from "#/server/bible_study/getBibleStudy";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -11,5 +12,5 @@ export const Route = createFileRoute("/_authed/study/$studyId")({
       },
     });
   },
-  pendingComponent: () => <div>Loading Study...</div>,
+  pendingComponent: Loading,
 });
