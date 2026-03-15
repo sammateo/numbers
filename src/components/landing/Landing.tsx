@@ -2,7 +2,7 @@ import { login } from "#/auth/supabase";
 import Button from "#/ui/button/Button";
 import { useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { BookOpen, FileText, Video, Users } from "lucide-react";
+import { BookOpen, FileText, Video, Users, Hash } from "lucide-react";
 
 const sampleStudies = [
   {
@@ -69,8 +69,8 @@ export function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
-              <BookOpen className="w-8 h-8 text-primary" />
-              <span className="text-xl text-primary">Scripture</span>
+              <Hash className="w-8 h-8 text-primary" />
+              <span className="text-xl text-primary">Numbers</span>
             </div>
             <div className="flex items-center gap-3">
               <Button
@@ -102,7 +102,7 @@ export function Landing() {
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto text-center space-y-8">
             <div className="inline-block p-4 bg-primary/10 rounded-full mb-4">
-              <BookOpen className="w-12 h-12 md:w-16 md:h-16 text-primary" />
+              <Hash className="w-12 h-12 md:w-16 md:h-16 text-primary" />
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl leading-tight">
               Create and Share
@@ -271,7 +271,7 @@ export function Landing() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <BookOpen className="w-6 h-6 text-primary" />
+              <Hash className="w-6 h-6 text-primary" />
               <span className="text-primary">Scripture</span>
             </div>
             {/* <div className="flex items-center gap-6 text-sm text-muted-foreground">

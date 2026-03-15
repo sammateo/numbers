@@ -1,5 +1,6 @@
 import { login, logout } from "#/auth/supabase";
 import { useNavigationBarStore } from "#/store/useNavigationBarStore";
+import Button from "#/ui/button/Button";
 import { useRouteContext, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { IoMenu } from "react-icons/io5";
@@ -24,8 +25,8 @@ export default function Header() {
         </div>
 
         {/* <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pb-1 text-sm font-semibold "></div> */}
-        <button
-          className="inline-block justify-self-end rounded border cursor-pointer border-indigo-600 bg-indigo-600 px-5 py-2 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
+        <Button
+          className="inline-block justify-self-end font-medium"
           onClick={async () => {
             if (isAuthenticated) await triggerLogout();
             else await triggerLogin();
@@ -34,7 +35,7 @@ export default function Header() {
           }}
         >
           {isAuthenticated ? "Sign Out" : "Sign In"}
-        </button>
+        </Button>
       </nav>
     </header>
   );

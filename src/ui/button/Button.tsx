@@ -8,6 +8,10 @@ const buttonVariants = tv({
       primary: "bg-primary text-primary-foreground hover:bg-primary/90",
       secondary: "text-foreground hover:text-primary",
     },
+    disabled: {
+      true: "bg-muted cursor-not-allowed hover:bg-muted",
+      false: "",
+    },
   },
 });
 
@@ -17,17 +21,24 @@ const Button = ({
   variant = "primary",
   className,
   children,
+  disabled,
 }: {
   label?: string;
   onClick?: () => void;
   variant?: "primary" | "secondary";
   className?: string;
   children?: ReactNode;
+  disabled?: boolean;
 }) => {
   return (
     <button
       onClick={onClick}
-      className={buttonVariants({ color: variant, className: className })}
+      disabled={disabled}
+      className={buttonVariants({
+        color: variant,
+        disabled,
+        className,
+      })}
     >
       {children || label}
     </button>

@@ -1,7 +1,16 @@
 import type { Editor } from "@tiptap/core";
 import { useEditorState } from "@tiptap/react";
-
+import { HiListBullet } from "react-icons/hi2";
 import { menuBarStateSelector } from "./menuBarState.ts";
+import { VscHorizontalRule, VscListOrdered } from "react-icons/vsc";
+import { BsBlockquoteRight } from "react-icons/bs";
+import {
+  FaBold,
+  FaItalic,
+  FaParagraph,
+  FaStrikethrough,
+} from "react-icons/fa6";
+import { FaRedo, FaUndo } from "react-icons/fa";
 
 export const MenuBar = ({ editor }: { editor: Editor }) => {
   const editorState = useEditorState({
@@ -14,47 +23,42 @@ export const MenuBar = ({ editor }: { editor: Editor }) => {
   }
 
   return (
-    <div className="">
-      <div className="border-b-2 border-gray-300 [&>button]:px-2 [&>button]:py-1 [&>button]:rounded">
+    <div className="bg-background rounded-t-sm p-1 border-b border-gray-300">
+      <div className=" [&>button]:px-2 [&>button]:py-1 [&>button]:rounded flex gap-2 items-center flex-wrap">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           disabled={!editorState.canBold}
           className={editorState.isBold ? "is-active" : ""}
         >
-          Bold
+          <FaBold className="size-6 py-1" />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           disabled={!editorState.canItalic}
           className={editorState.isItalic ? "is-active" : ""}
         >
-          Italic
+          <FaItalic className="size-6 py-1" />
         </button>
         <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
           disabled={!editorState.canStrike}
           className={editorState.isStrike ? "is-active" : ""}
         >
-          Strike
+          <FaStrikethrough className="size-6 py-1" />
         </button>
-        <button
+        {/* <button
           onClick={() => editor.chain().focus().toggleCode().run()}
           disabled={!editorState.canCode}
           className={editorState.isCode ? "is-active" : ""}
         >
           Code
-        </button>
-        <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
-          Clear marks
-        </button>
-        <button onClick={() => editor.chain().focus().clearNodes().run()}>
-          Clear nodes
-        </button>
+        </button> */}
+
         <button
           onClick={() => editor.chain().focus().setParagraph().run()}
           className={editorState.isParagraph ? "is-active" : ""}
         >
-          Paragraph
+          <FaParagraph className="size-6 py-1" />
         </button>
         <button
           onClick={() =>
@@ -88,7 +92,7 @@ export const MenuBar = ({ editor }: { editor: Editor }) => {
         >
           H4
         </button>
-        <button
+        {/* <button
           onClick={() =>
             editor.chain().focus().toggleHeading({ level: 5 }).run()
           }
@@ -103,50 +107,60 @@ export const MenuBar = ({ editor }: { editor: Editor }) => {
           className={editorState.isHeading6 ? "is-active" : ""}
         >
           H6
-        </button>
+        </button> */}
         <button
+          title="bullet list"
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={editorState.isBulletList ? "is-active" : ""}
         >
-          Bullet list
+          <HiListBullet className="size-5" />
         </button>
         <button
+          title="ordered list"
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={editorState.isOrderedList ? "is-active" : ""}
         >
-          Ordered list
+          <VscListOrdered className="size-5" />
         </button>
-        <button
+        {/* <button
           onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           className={editorState.isCodeBlock ? "is-active" : ""}
         >
           Code block
-        </button>
+        </button> */}
         <button
+          title="block quote"
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={editorState.isBlockquote ? "is-active" : ""}
         >
-          Blockquote
+          <BsBlockquoteRight className="size-5" />
         </button>
         <button
           onClick={() => editor.chain().focus().setHorizontalRule().run()}
+          title="Horizontal Rule"
         >
-          Horizontal rule
+          <VscHorizontalRule className="size-6" />
         </button>
-        <button onClick={() => editor.chain().focus().setHardBreak().run()}>
+        {/* <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+          Clear marks
+        </button>
+        <button onClick={() => editor.chain().focus().clearNodes().run()}>
+          Reset formatting
+        </button> */}
+        {/* <button onClick={() => editor.chain().focus().setHardBreak().run()}>
           Hard break
-        </button>
+        </button> */}
         <button
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editorState.canUndo}
         >
-          Undo
+          <FaUndo className="size-6 py-1" />
         </button>
         <button
           onClick={() => editor.chain().focus().redo().run()}
           disabled={!editorState.canRedo}
         >
-          Redo
+          <FaRedo className="size-6 py-1" />
         </button>
       </div>
     </div>

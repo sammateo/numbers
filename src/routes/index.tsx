@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-function App() {
+export function App() {
   return (
     <main>
       <section className="bg-white lg:grid lg:h-screen lg:place-content-center">

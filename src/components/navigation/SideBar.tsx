@@ -9,7 +9,7 @@ const SideBar = () => {
   const open = useNavigationBarStore((s) => s.open);
   const setOpen = useNavigationBarStore((s) => s.setOpen);
   const onClose = () => setOpen(false);
-  const { isAuthenticated } = useRouteContext({ from: "__root__" });
+  const { isAuthenticated, profile } = useRouteContext({ from: "__root__" });
 
   const navLinks = [
     {
@@ -30,12 +30,12 @@ const SideBar = () => {
       path: "/study",
       auth: true,
     },
-    {
-      icon: RiUserShared2Line,
-      label: "Shared with Me",
-      path: "/study",
-      auth: true,
-    },
+    // {
+    //   icon: RiUserShared2Line,
+    //   label: "Shared with Me",
+    //   path: "/study",
+    //   auth: true,
+    // },
     {
       icon: BsPerson,
       label: "Profile",
@@ -96,24 +96,24 @@ const SideBar = () => {
 
         {isAuthenticated && (
           <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
-            <a
-              href="#"
+            <Link
+              to="/profile"
+              onClick={onClose}
               className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
             >
-              <img
-                alt=""
-                src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?auto=format&amp;fit=crop&amp;q=80&amp;w=1160"
-                className="size-10 rounded-full object-cover"
-              />
-
+              <div className="size-10 rounded-full bg-accent flex items-center justify-center text-accent-foreground shrink-0">
+                {profile?.username?.charAt(0)}
+              </div>
               <div>
                 <p className="text-xs">
-                  <strong className="block font-medium">John Doe</strong>
+                  <strong className="block font-medium">
+                    {profile?.first_name} {profile?.last_name}
+                  </strong>
 
-                  <span> @johndoe </span>
+                  <span> @{profile?.username} </span>
                 </p>
               </div>
-            </a>
+            </Link>
           </div>
         )}
       </aside>

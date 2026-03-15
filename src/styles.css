@@ -35,9 +35,9 @@ hr {
   padding: 5px 10px;
   border-radius: 5px;
 } */
-/* .is-active {
+.is-active {
   background-color: rgb(230, 230, 230);
-} */
+}
 .ProseMirror-focused {
   outline: none;
 }

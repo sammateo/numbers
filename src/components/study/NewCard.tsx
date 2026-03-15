@@ -29,9 +29,11 @@ const NewCard = ({
               </h3>
               <VisibilityIcon className="w-4 h-4 text-muted-foreground shrink-0 mt-1" />
             </div>
-            <div className="inline-block px-2 py-1 bg-accent/10 text-accent-foreground rounded text-xs md:text-sm">
-              {topic}
-            </div>
+            {topic && (
+              <div className="inline-block px-2 py-1 bg-accent/90 text-accent-foreground rounded text-xs md:text-sm">
+                {topic}
+              </div>
+            )}
           </div>
 
           <p className="text-sm md:text-base text-muted-foreground line-clamp-2 leading-relaxed">
