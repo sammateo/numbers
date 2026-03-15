@@ -82,12 +82,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         {/* <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} /> */}
         <HeadContent />
       </head>
-      <body className="font-sans antialiased w-screen wrap-anywhere selection:bg-[rgba(79,184,178,0.24)] flex">
+      <body className="font-sans antialiased w-screen wrap-anywhere selection:bg-[rgba(79,184,178,0.24)] flex bg-background">
         {/* <SupabaseAuthProvider> */}
         <SideBar />
         <div className="flex-1">
           <Header />
-          {children}
+          <div className="px-4 py-2 h-[94vh] overflow-scroll">{children}</div>
         </div>
         {/* <Footer /> */}
         {/* </SupabaseAuthProvider> */}

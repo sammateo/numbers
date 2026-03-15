@@ -2,6 +2,7 @@ import type {
   BibleStudyCollaborator,
   BibleStudyMedia,
   BibleStudyVerse,
+  FullBibleStudyCollaborator,
   Profile,
   RichTextContent,
   StudyVisibility,
@@ -43,5 +44,5 @@ export interface FullBibleStudy extends BibleStudy {
   creator: Profile;
   verses: BibleStudyVerse[];
   media: BibleStudyMedia[];
-  collaborators: BibleStudyCollaborator[];
+  collaborators: FullBibleStudyCollaborator[];
 }

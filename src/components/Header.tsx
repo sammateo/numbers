@@ -12,7 +12,7 @@ export default function Header() {
 
   const router = useRouter();
   return (
-    <header className="z-50 border-b bg-(--header-bg) px-4 flex flex-wrap justify-between items-center">
+    <header className="z-50 border-b bg-sidebar px-4 flex flex-wrap justify-between items-center">
       <nav className="flex flex-wrap w-full items-center justify-between gap-x-3 gap-y-2 py-2 sm:py-2">
         <div>
           <button

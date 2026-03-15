@@ -53,7 +53,7 @@ const SideBar = () => {
         />
       )}
       <aside
-        className={`flex h-screen w-64 flex-col justify-between border-e border-gray-100 bg-white z-50 fixed lg:static ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+        className={`flex h-screen w-64 flex-col justify-between border-e border-gray-100 bg-sidebar z-50 fixed lg:static ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
         <div className="px-4 py-6">
           <div className="flex items-center justify-between gap-2">

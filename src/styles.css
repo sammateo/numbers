@@ -24,20 +24,20 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: white;
+  background-color: var(--color-background);
   color: black;
 }
 
 hr {
   background-color: gray;
 }
-.nav-link {
+/* .nav-link {
   padding: 5px 10px;
   border-radius: 5px;
-}
-.is-active {
+} */
+/* .is-active {
   background-color: rgb(230, 230, 230);
-}
+} */
 .ProseMirror-focused {
   outline: none;
 }
