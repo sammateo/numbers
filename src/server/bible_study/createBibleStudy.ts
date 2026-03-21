@@ -47,7 +47,7 @@ export const CreateBibleStudySchema = z.object({
   //   updated_at: z.string(),
 });
 
-export const createBibleStudy = createServerFn()
+export const createBibleStudy = createServerFn({ method: "POST" })
   .inputValidator(CreateBibleStudySchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient();

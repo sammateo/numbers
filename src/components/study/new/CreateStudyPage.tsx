@@ -34,6 +34,10 @@ export function CreateStudyPage({
   const setTopic = useCreateBibleStudyStore((s) => s.setTopic);
   const description = useCreateBibleStudyStore((s) => s.description);
   const setDescription = useCreateBibleStudyStore((s) => s.setDescription);
+
+  const verses = useCreateBibleStudyStore((s) => s.verses);
+  const setVerses = useCreateBibleStudyStore((s) => s.setVerses);
+
   const visibility = useCreateBibleStudyStore((s) => s.visibility);
   const setVisibility = useCreateBibleStudyStore((s) => s.setVisibility);
   const reset = useCreateBibleStudyStore((s) => s.reset);
@@ -47,7 +51,7 @@ export function CreateStudyPage({
   // allow user to publish study
   const enablePublish = title && description && content && !publishing;
 
-  const [verses, setVerses] = useState<any[]>([]);
+  // const [verses, setVerses] = useState<any[]>([]);
   const [media, setMedia] = useState<any[]>([]);
   const [collaborators, setCollaborators] = useState<any[]>([]);
   // const [visibility, setVisibility] = useState<"private" | "shared" | "public">(
@@ -69,6 +73,9 @@ export function CreateStudyPage({
   const handlePublish = async () => {
     const { title, topic, description, content, visibility } =
       useCreateBibleStudyStore.getState();
+
+    console.log(verses);
+    return;
 
     try {
       setPublishing(true);
@@ -191,13 +198,13 @@ export function CreateStudyPage({
           />
         </div>
 
-        {/* <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
+        <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
           <h3 className="text-base md:text-lg">Scripture References</h3>
           <p className="text-sm text-muted-foreground">
             Add key verses that support your study
           </p>
           <VerseInput verses={verses} onChange={setVerses} />
-        </div> */}
+        </div>
 
         {/* <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
           <h3 className="text-base md:text-lg">Media & Resources</h3>

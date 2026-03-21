@@ -9,7 +9,7 @@ const UpdateBibleStudySchema = CreateBibleStudySchema.extend({
   id: z.uuid(),
 });
 
-export const updateBibleStudy = createServerFn()
+export const updateBibleStudy = createServerFn({ method: "POST" })
   .inputValidator(UpdateBibleStudySchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient();

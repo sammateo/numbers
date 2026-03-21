@@ -2,17 +2,19 @@ import type { MediaType, Timestamp, UUID } from "..";
 
 export interface BibleStudyVerse {
   id: UUID;
-  study_id: UUID;
+  study_id?: UUID;
+  version: number;
   book: string;
   chapter: number;
   verse_start: number;
   verse_end: number | null;
   verse_text: string | null;
-  created_at: Timestamp;
+  created_at?: Timestamp;
 }
 
 export interface BibleStudyVerseInsert {
   study_id: UUID;
+  version: number;
   book: string;
   chapter: number;
   verse_start: number;
