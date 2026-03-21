@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import ButtonLink from "#/ui/button/ButtonLink";
 
 const NoBibleStudies = () => {
   return (
@@ -9,7 +9,7 @@ const NoBibleStudies = () => {
         viewBox="0 0 24 24"
         strokeWidth="1.5"
         stroke="currentColor"
-        className="mx-auto size-20 text-gray-400"
+        className="mx-auto size-20 text-primary"
       >
         <path
           strokeLinecap="round"
@@ -18,29 +18,27 @@ const NoBibleStudies = () => {
         ></path>
       </svg>
 
-      <h2 className="mt-6 text-2xl font-bold text-gray-900">
+      <h2 className="mt-6 text-2xl font-bold text-primary">
         Hmm, nothing found
       </h2>
 
-      <p className="mt-4 text-pretty text-gray-700">
+      <p className="mt-4 text-pretty text-muted-foreground">
         It seems like you do not have any Bible studies as yet. Get started by
         creating one
       </p>
 
       <div className="mt-6 space-y-2">
-        <Link
+        <ButtonLink
+          className="w-full block"
           to="/study/new"
-          className="block w-full rounded-lg bg-indigo-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
-        >
-          New Bible Study
-        </Link>
-
-        <Link
+          label="New Bible Study"
+        />
+        <ButtonLink
+          className="w-full block border border-primary"
           to="/"
-          className="block w-full rounded-lg border border-indigo-600 px-6 py-3 text-sm font-medium text-indigo-600 transition-colors hover:bg-indigo-50"
-        >
-          Home
-        </Link>
+          label="Home"
+          variant="secondary"
+        />
       </div>
     </div>
   );

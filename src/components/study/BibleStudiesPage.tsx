@@ -25,7 +25,7 @@ const BibleStudiesPage = () => {
           New <span className="hidden sm:block">Study</span>
         </Link>
       </div>
-      {!data || (data.length === 0 && <NoBibleStudies />)}
+      {(!data || data.length === 0) && <NoBibleStudies />}
       {data && data.length > 0 && (
         <div className="flex flex-col items-stretch gap-5">
           <h3 className="font-semibold text-lg">My Studies</h3>

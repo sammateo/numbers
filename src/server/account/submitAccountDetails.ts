@@ -22,9 +22,9 @@ export const submitProfile = createServerFn()
     const supabase = getSupabaseServerClient();
     const { user } = await getUserSessionFn();
     const updateObject: ProfileUpdate = {
-      first_name: data.firstName,
-      last_name: data.lastName,
-      username: data.username,
+      first_name: data.firstName.trim(),
+      last_name: data.lastName.trim(),
+      username: data.username.toLowerCase().trim(),
     };
     const { data: _, error } = await supabase
       .schema("numbers")

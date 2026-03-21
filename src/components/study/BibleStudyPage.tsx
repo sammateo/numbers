@@ -1,11 +1,26 @@
-import { getRouteApi, Link } from "@tanstack/react-router";
+import {
+  getRouteApi,
+  Link,
+  useNavigate,
+  useRouteContext,
+} from "@tanstack/react-router";
 import BibleStudyContentEditor from "./new/BibleStudyContentEditor";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { CiCalendar } from "react-icons/ci";
 import { LuUsers } from "react-icons/lu";
+import Button from "#/ui/button/Button";
+import { deleteBibleStudy } from "#/server/bible_study/deleteBibleStudy";
+import { useState } from "react";
+import { LoaderCircle } from "lucide-react";
+import { useCreateBibleStudyStore } from "#/store/useCreateBibleStudyStore";
 const BibleStudyPage = () => {
   const routeApi = getRouteApi("/_authed/study/$studyId");
   const bibleStudy = routeApi.useLoaderData();
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { user } = useRouteContext({ from: "__root__" });
+
+  const setTitle = useCreateBibleStudyStore((s) => s.setTitle);
   return (
     <div className="lg:max-w-5xl pt-4 mx-auto flex flex-col items-stretch gap-5">
       <Link
@@ -87,15 +102,58 @@ const BibleStudyPage = () => {
         disabled={true}
         content={bibleStudy?.content || null}
       />
-      <div className="flex gap-2 justify-center">
-        <Link
+      {bibleStudy?.creator_id === user?.id && (
+        <div className="flex flex-col sm:flex-row gap-2 justify-center">
+          <Button
+            className="w-full sm:w-auto flex gap-2 items-center"
+            onClick={async () => {
+              setTitle(bibleStudy?.title || "");
+              navigate({
+                to: "/study/edit/$studyId",
+                params: {
+                  studyId: bibleStudy?.id || "",
+                },
+              });
+            }}
+          >
+            {/* {deleting && <LoaderCircle className="animate-spin size-5" />} */}
+            <span>Edit Study</span>
+          </Button>
+          <Button
+            disabled={deleting}
+            variant="destructive"
+            className="w-full sm:w-auto flex gap-2 items-center"
+            onClick={async () => {
+              try {
+                if (!confirm("Are you sure you want to delete this study?")) {
+                  return;
+                }
+                setDeleting(true);
+                await deleteBibleStudy({
+                  data: {
+                    study_id: bibleStudy?.id || "",
+                  },
+                });
+                setDeleting(false);
+                navigate({ to: "/study" });
+              } catch (error) {
+                console.error(error);
+                setDeleting(false);
+              }
+            }}
+          >
+            {deleting && <LoaderCircle className="animate-spin size-5" />}
+            <span>Delete Study</span>
+          </Button>
+        </div>
+      )}
+      {/* <Link
           to="/study"
           className="inline-flex items-center gap-2 text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors mb-4 md:mb-6"
         >
           <FaArrowLeftLong />
           Back to studies
-        </Link>
-      </div>
+        </Link> */}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import type { BibleStudy } from "#/types";
+import type { FullBibleStudy } from "#/types";
 import { Link } from "@tanstack/react-router";
 import { CiGlobe } from "react-icons/ci";
 import { GoLock } from "react-icons/go";
@@ -10,7 +10,9 @@ const NewCard = ({
   topic,
   visibility,
   created_at,
-}: BibleStudy) => {
+  creator,
+  collaborators,
+}: FullBibleStudy) => {
   const visibilityIcons = {
     private: GoLock,
     shared: LuUsers,
@@ -43,17 +45,18 @@ const NewCard = ({
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-2 border-t border-border">
             <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
               <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center text-xs text-accent-foreground">
-                {"test".charAt(0)}
+                {creator.username.charAt(0)}
               </div>
-              <span className="truncate">@{"test"}</span>
-              {/* {collaborators > 0 && (
+              <span className="truncate">@{creator.username}</span>
+              {collaborators && collaborators.length > 0 && (
                 <>
                   <span className="hidden sm:inline">•</span>
                   <span className="hidden sm:inline">
-                    {collaborators} collaborator{collaborators > 1 ? "s" : ""}
+                    {collaborators.length} collaborator
+                    {collaborators.length > 1 ? "s" : ""}
                   </span>
                 </>
-              )} */}
+              )}
             </div>
             <div className="text-xs md:text-sm text-muted-foreground">
               {new Date(created_at).toDateString()}{" "}

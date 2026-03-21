@@ -22,6 +22,7 @@ import { Route as AuthedOnboardingRouteImport } from './routes/_authed/onboardin
 import { Route as AuthedStudyIndexRouteImport } from './routes/_authed/study/index'
 import { Route as AuthedStudyNewRouteImport } from './routes/_authed/study/new'
 import { Route as AuthedStudyStudyIdRouteImport } from './routes/_authed/study/$studyId'
+import { Route as AuthedStudyEditStudyIdRouteImport } from './routes/_authed/study/edit/$studyId'
 
 const RssDotxmlRoute = RssDotxmlRouteImport.update({
   id: '/rss.xml',
@@ -87,6 +88,11 @@ const AuthedStudyStudyIdRoute = AuthedStudyStudyIdRouteImport.update({
   path: '/study/$studyId',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedStudyEditStudyIdRoute = AuthedStudyEditStudyIdRouteImport.update({
+  id: '/study/edit/$studyId',
+  path: '/study/edit/$studyId',
+  getParentRoute: () => AuthedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/study/$studyId': typeof AuthedStudyStudyIdRoute
   '/study/new': typeof AuthedStudyNewRoute
   '/study/': typeof AuthedStudyIndexRoute
+  '/study/edit/$studyId': typeof AuthedStudyEditStudyIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/study/$studyId': typeof AuthedStudyStudyIdRoute
   '/study/new': typeof AuthedStudyNewRoute
   '/study': typeof AuthedStudyIndexRoute
+  '/study/edit/$studyId': typeof AuthedStudyEditStudyIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/_authed/study/$studyId': typeof AuthedStudyStudyIdRoute
   '/_authed/study/new': typeof AuthedStudyNewRoute
   '/_authed/study/': typeof AuthedStudyIndexRoute
+  '/_authed/study/edit/$studyId': typeof AuthedStudyEditStudyIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/study/$studyId'
     | '/study/new'
     | '/study/'
+    | '/study/edit/$studyId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/study/$studyId'
     | '/study/new'
     | '/study'
+    | '/study/edit/$studyId'
   id:
     | '__root__'
     | '/'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/_authed/study/$studyId'
     | '/_authed/study/new'
     | '/_authed/study/'
+    | '/_authed/study/edit/$studyId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -281,6 +293,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedStudyStudyIdRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/study/edit/$studyId': {
+      id: '/_authed/study/edit/$studyId'
+      path: '/study/edit/$studyId'
+      fullPath: '/study/edit/$studyId'
+      preLoaderRoute: typeof AuthedStudyEditStudyIdRouteImport
+      parentRoute: typeof AuthedRoute
+    }
   }
 }
 
@@ -291,6 +310,7 @@ interface AuthedRouteChildren {
   AuthedStudyStudyIdRoute: typeof AuthedStudyStudyIdRoute
   AuthedStudyNewRoute: typeof AuthedStudyNewRoute
   AuthedStudyIndexRoute: typeof AuthedStudyIndexRoute
+  AuthedStudyEditStudyIdRoute: typeof AuthedStudyEditStudyIdRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
@@ -300,6 +320,7 @@ const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedStudyStudyIdRoute: AuthedStudyStudyIdRoute,
   AuthedStudyNewRoute: AuthedStudyNewRoute,
   AuthedStudyIndexRoute: AuthedStudyIndexRoute,
+  AuthedStudyEditStudyIdRoute: AuthedStudyEditStudyIdRoute,
 }
 
 const AuthedRouteWithChildren =

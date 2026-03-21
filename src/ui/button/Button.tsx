@@ -1,11 +1,22 @@
 import type { ReactNode } from "react";
 import { tv } from "tailwind-variants";
 
-const buttonVariants = tv({
+export interface ButtonProps {
+  label?: string;
+  onClick?: () => void;
+  variant?: "primary" | "secondary" | "destructive";
+  className?: string;
+  children?: ReactNode;
+  disabled?: boolean;
+}
+
+export const buttonVariants = tv({
   base: "cursor-pointer px-4 py-2 transition-colors rounded-lg",
   variants: {
     color: {
       primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+      destructive:
+        "bg-destructive text-primary-foreground hover:bg-destructive/90",
       secondary: "text-foreground hover:text-primary",
     },
     disabled: {
@@ -22,14 +33,7 @@ const Button = ({
   className,
   children,
   disabled,
-}: {
-  label?: string;
-  onClick?: () => void;
-  variant?: "primary" | "secondary";
-  className?: string;
-  children?: ReactNode;
-  disabled?: boolean;
-}) => {
+}: ButtonProps) => {
   return (
     <button
       onClick={onClick}

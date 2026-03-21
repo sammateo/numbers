@@ -1,12 +1,26 @@
 import { createBibleStudy } from "#/server/bible_study/createBibleStudy";
 import { useCreateBibleStudyStore } from "#/store/useCreateBibleStudyStore";
 import Button from "#/ui/button/Button";
-import { useNavigate, useRouteContext } from "@tanstack/react-router";
+import {
+  useLoaderData,
+  useNavigate,
+  useRouteContext,
+} from "@tanstack/react-router";
 import { Globe, LoaderCircle, Lock, Send, Users } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BibleStudyContentEditor from "./BibleStudyContentEditor";
+import { VerseInput } from "./VerseInput";
+import { MediaInput } from "./MediaInput";
+import { CollaboratorInput } from "./CollaboratorInput";
+import { updateBibleStudy } from "#/server/bible_study/updateBibleStudy";
 
-export function CreateStudyPage() {
+export function CreateStudyPage({
+  type = "new",
+  study_id,
+}: {
+  type?: "new" | "edit";
+  study_id?: string;
+}) {
   // utils
   const navigate = useNavigate();
 
@@ -20,16 +34,30 @@ export function CreateStudyPage() {
   const setTopic = useCreateBibleStudyStore((s) => s.setTopic);
   const description = useCreateBibleStudyStore((s) => s.description);
   const setDescription = useCreateBibleStudyStore((s) => s.setDescription);
+  const visibility = useCreateBibleStudyStore((s) => s.visibility);
+  const setVisibility = useCreateBibleStudyStore((s) => s.setVisibility);
   const reset = useCreateBibleStudyStore((s) => s.reset);
 
+  useEffect(() => {
+    if (type === "new") reset();
+  }, []);
+
   const [publishing, setPublishing] = useState<boolean>(false);
+
+  // allow user to publish study
+  const enablePublish = title && description && content && !publishing;
 
   const [verses, setVerses] = useState<any[]>([]);
   const [media, setMedia] = useState<any[]>([]);
   const [collaborators, setCollaborators] = useState<any[]>([]);
-  const [visibility, setVisibility] = useState<"private" | "shared" | "public">(
-    "private",
-  );
+  // const [visibility, setVisibility] = useState<"private" | "shared" | "public">(
+  //   "private",
+  // );
+
+  // if (type === "edit") {
+  //   const data = useLoaderData({ from: "/_authed/study/edit/$studyId" });
+  //   setTitle(data?.title || "");
+  // }
 
   //mutations
 
@@ -44,15 +72,28 @@ export function CreateStudyPage() {
 
     try {
       setPublishing(true);
-      await createBibleStudy({
-        data: {
-          title,
-          topic,
-          description,
-          content,
-          visibility,
-        },
-      });
+      if (type === "new") {
+        await createBibleStudy({
+          data: {
+            title,
+            topic,
+            description,
+            content,
+            visibility,
+          },
+        });
+      } else if (type === "edit") {
+        await updateBibleStudy({
+          data: {
+            id: study_id || "",
+            title,
+            topic,
+            description,
+            content,
+            visibility,
+          },
+        });
+      }
       setPublishing(false);
       reset();
       navigate({ to: "/study" });
@@ -88,7 +129,9 @@ export function CreateStudyPage() {
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl mb-2">Create Bible Study</h1>
+        <h1 className="text-2xl md:text-3xl mb-2">
+          {type === "new" ? "Create" : "Edit"} Bible Study
+        </h1>
         <p className="text-sm md:text-base text-muted-foreground">
           Share your insights and discoveries from scripture
         </p>
@@ -154,17 +197,17 @@ export function CreateStudyPage() {
             Add key verses that support your study
           </p>
           <VerseInput verses={verses} onChange={setVerses} />
-        </div>
+        </div> */}
 
-        <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
+        {/* <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
           <h3 className="text-base md:text-lg">Media & Resources</h3>
           <p className="text-sm text-muted-foreground">
             Add videos, links, or images to enhance your study
           </p>
           <MediaInput media={media} onChange={setMedia} />
-        </div>
+        </div> */}
 
-        <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
+        {/* <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
           <h3 className="text-base md:text-lg">Collaborators</h3>
           <p className="text-sm text-muted-foreground">
             Invite others to contribute to this study
@@ -173,10 +216,14 @@ export function CreateStudyPage() {
             collaborators={collaborators}
             onChange={setCollaborators}
           />
-        </div>
+        </div> */}
 
         <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
           <h3 className="text-base md:text-lg">Visibility</h3>
+          <p className="text-muted-foreground text-xs">
+            * feature still under construction (all bible studies will be
+            treated as private until feature is completed)
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {visibilityOptions.map((option) => {
               const Icon = option.icon;
@@ -204,7 +251,7 @@ export function CreateStudyPage() {
               );
             })}
           </div>
-        </div> */}
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           {/* <button
@@ -216,7 +263,7 @@ export function CreateStudyPage() {
             Save Draft
           </button> */}
           <Button
-            disabled={publishing}
+            disabled={!enablePublish}
             onClick={handlePublish}
             className="flex-1 flex items-center justify-center gap-2 px-6 py-3"
           >
@@ -225,7 +272,7 @@ export function CreateStudyPage() {
             ) : (
               <Send className="w-5 h-5" />
             )}
-            Publish Study
+            {type === "new" ? "Publish" : "Update"} Study
           </Button>
         </div>
       </div>

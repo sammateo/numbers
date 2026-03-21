@@ -4,7 +4,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const GetBibleStudySchema = z.object({
-  study_id: z.string(),
+  study_id: z.uuid(),
 });
 
 export const getBibleStudy = createServerFn()

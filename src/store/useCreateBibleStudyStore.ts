@@ -1,10 +1,11 @@
-import type { BibleStudy, RichTextContent } from "#/types";
+import type { BibleStudy, RichTextContent, StudyVisibility } from "#/types";
 import { create } from "zustand";
 type CreateBibleStudyState = BibleStudy & {
   setTitle: (title: string) => void;
   setTopic: (topic: string) => void;
   setDescription: (description: string) => void;
   setContent: (content: RichTextContent | null) => void;
+  setVisibility: (visibility: StudyVisibility) => void;
   reset: () => void;
 };
 
@@ -23,6 +24,7 @@ export const useCreateBibleStudyStore = create<CreateBibleStudyState>(
     setTopic: (topic) => set({ topic }),
     setDescription: (description) => set({ description }),
     setContent: (content) => set({ content }),
+    setVisibility: (visibility) => set({ visibility }),
     reset: () =>
       set({
         id: "",

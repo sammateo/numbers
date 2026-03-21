@@ -31,7 +31,7 @@ const JsonSchema: z.ZodType<any> = z.lazy(() =>
   ]),
 );
 
-const CreateBibleStudySchema = z.object({
+export const CreateBibleStudySchema = z.object({
   // id: z.string(),
   //   creator_id: z.string(),
   title: z.string(),
