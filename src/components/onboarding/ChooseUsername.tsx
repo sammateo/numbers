@@ -46,7 +46,9 @@ const ChooseUsername = ({ next, back }: ButtonNavigationInterface) => {
                   value={username}
                   onChange={(e) => {
                     setUsername(e.target.value.toLowerCase().replace(" ", ""));
-                    field.handleChange(e.target.value);
+                    field.handleChange(
+                      e.target.value.toLowerCase().replace(" ", ""),
+                    );
                   }}
                   type="text"
                   id="FirstName"
