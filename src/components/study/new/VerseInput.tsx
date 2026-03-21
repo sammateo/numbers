@@ -17,7 +17,6 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
   const [selectedChapter, setSelectedChapter] = useState("");
   const [selectedVerseStart, setSelectedVerseStart] = useState("");
   const [selectedVerseEnd, setSelectedVerseEnd] = useState("");
-  const [text, setText] = useState("");
 
   //server fn calls
   const getBooksTrigger = useServerFn(getBooks);
@@ -35,7 +34,7 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
   const getPassageTrigger = useServerFn(getScripture);
   const { data: fetchedPassage } = useQuery({
     queryKey: [
-      "books",
+      "passage",
       {
         selectedVersion,
         selectedBook,
@@ -97,13 +96,13 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
   };
   const buildVerseReference = (
     book: string,
+    book_title: string | undefined,
     chapter: number,
     verseStart: number,
     verseEnd: number | null,
   ) => {
     if (!book || !chapter || !verseStart) return "";
-    const formattedBook = fetchedBooks?.data.find((b) => b.id === book);
-    let ref = `${formattedBook?.title || book} ${chapter}:${verseStart}`;
+    let ref = `${book_title || book} ${chapter}:${verseStart}`;
     if (verseEnd && verseEnd !== verseStart) {
       ref += `-${verseEnd}`;
     }
@@ -119,6 +118,8 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
           id: Date.now().toString(),
           version: selectedVersion,
           book: selectedBook,
+          book_title: fetchedBooks?.data.find((b) => b.id === selectedBook)
+            ?.title,
           chapter: Number(selectedChapter),
           verse_start: Number(selectedVerseStart),
           verse_end: Number(selectedVerseEnd),
@@ -130,7 +131,6 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
       setSelectedChapter("");
       setSelectedVerseStart("");
       setSelectedVerseEnd("");
-      setText("");
     }
   };
 
@@ -140,8 +140,6 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
 
   const handleVersionChange = (value: string) => {
     setSelectedVersion(Number(value));
-    //get books for the version
-    // console.log(fetchedBooks);
   };
 
   const handleBookChange = (value: string) => {
@@ -244,21 +242,18 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
 
         {/* Verse Text Input */}
         <div className="flex gap-2">
-          <input
-            type="text"
-            // value={text}
-            value={fetchedPassage || text}
+          <textarea
+            value={fetchedPassage ?? ""}
             disabled
-            onChange={(e) => setText(e.target.value)}
+            rows={2}
+            readOnly
             placeholder="Enter verse text (e.g., For God so loved the world...)"
             className="flex-1 px-4 py-2 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed"
           />
           <button
             type="button"
             onClick={addVerse}
-            disabled={
-              !buildReference() || (!text.trim() && !fetchedPassage?.trim())
-            }
+            disabled={!buildReference() || !fetchedPassage?.trim()}
             className="px-3 md:px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus className="w-5 h-5" />
@@ -277,6 +272,7 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
                 <div className="text-xs md:text-sm text-accent">
                   {buildVerseReference(
                     verse.book,
+                    verse.book_title,
                     verse.chapter,
                     verse.verse_start,
                     verse.verse_end,

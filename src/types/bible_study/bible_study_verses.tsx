@@ -5,6 +5,7 @@ export interface BibleStudyVerse {
   study_id?: UUID;
   version: number;
   book: string;
+  book_title?: string;
   chapter: number;
   verse_start: number;
   verse_end: number | null;

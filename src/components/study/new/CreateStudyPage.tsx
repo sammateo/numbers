@@ -13,6 +13,8 @@ import { VerseInput } from "./VerseInput";
 import { MediaInput } from "./MediaInput";
 import { CollaboratorInput } from "./CollaboratorInput";
 import { updateBibleStudy } from "#/server/bible_study/updateBibleStudy";
+import { addBibleVerses } from "#/server/bible_verses/addBibleVerses";
+import { clearBibleVerses } from "#/server/bible_verses/clearBibleVerses";
 
 export function CreateStudyPage({
   type = "new",
@@ -73,14 +75,11 @@ export function CreateStudyPage({
   const handlePublish = async () => {
     const { title, topic, description, content, visibility } =
       useCreateBibleStudyStore.getState();
-
-    console.log(verses);
-    return;
-
     try {
       setPublishing(true);
       if (type === "new") {
-        await createBibleStudy({
+        //create bible study
+        const createdStudyId = await createBibleStudy({
           data: {
             title,
             topic,
@@ -89,7 +88,24 @@ export function CreateStudyPage({
             visibility,
           },
         });
+
+        //add verses
+        await addBibleVerses({
+          data: verses.map((verse) => {
+            return {
+              study_id: createdStudyId,
+              version: verse.version,
+              book: verse.book,
+              book_title: verse.book_title || null,
+              chapter: verse.chapter,
+              verse_start: verse.verse_start,
+              verse_end: verse.verse_end,
+              verse_text: verse.verse_text,
+            };
+          }),
+        });
       } else if (type === "edit") {
+        //update
         await updateBibleStudy({
           data: {
             id: study_id || "",
@@ -100,16 +116,45 @@ export function CreateStudyPage({
             visibility,
           },
         });
+
+        //clear current verses
+        await clearBibleVerses({
+          data: {
+            study_id: study_id || "",
+          },
+        });
+        //insert new verses
+        await addBibleVerses({
+          data: verses.map((verse) => {
+            return {
+              study_id: study_id || "",
+              version: verse.version,
+              book: verse.book,
+              book_title: verse.book_title || null,
+              chapter: verse.chapter,
+              verse_start: verse.verse_start,
+              verse_end: verse.verse_end,
+              verse_text: verse.verse_text,
+            };
+          }),
+        });
       }
       setPublishing(false);
       reset();
+      if (type === "edit") {
+        navigate({
+          to: "/study/$studyId",
+          params: {
+            studyId: study_id || "",
+          },
+        });
+        return;
+      }
       navigate({ to: "/study" });
     } catch (error) {
       setPublishing(false);
       console.error(error);
     }
-    // Mock publish functionality
-    // navigate("/dashboard");
   };
 
   const visibilityOptions = [

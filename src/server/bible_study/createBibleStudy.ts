@@ -60,7 +60,7 @@ export const createBibleStudy = createServerFn({ method: "POST" })
       content: data.content,
       visibility: data.visibility,
     };
-    const { data: _, error } = await supabase
+    const { data: createdStudy, error } = await supabase
       .schema("numbers")
       .from("bible_studies")
       .insert(insertObject)
@@ -69,7 +69,9 @@ export const createBibleStudy = createServerFn({ method: "POST" })
       console.error(error);
       throw new Error(error.message);
     }
-    return `Created bible study: ${data.title}`;
+    console.log(`Created bible study: ${data.title}`);
+    return createdStudy[0].id;
+    // return `Created bible study: ${data.title}`;
   });
 
 // // Call from anywhere - components, loaders, hooks, etc.

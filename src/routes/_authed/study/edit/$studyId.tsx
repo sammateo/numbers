@@ -29,6 +29,7 @@ function RouteComponent() {
   const setDescription = useCreateBibleStudyStore((s) => s.setDescription);
   const setContent = useCreateBibleStudyStore((s) => s.setContent);
   const setVisibility = useCreateBibleStudyStore((s) => s.setVisibility);
+  const setVerses = useCreateBibleStudyStore((s) => s.setVerses);
 
   useEffect(() => {
     if (!data) return;
@@ -37,6 +38,7 @@ function RouteComponent() {
     setDescription(data?.description || "");
     setContent(data?.content || "");
     setVisibility(data?.visibility || "private");
+    setVerses(data?.verses || []);
   }, [data]);
   return <CreateStudyPage type="edit" study_id={data?.id} />;
 }
