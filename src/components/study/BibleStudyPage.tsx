@@ -13,6 +13,28 @@ import { deleteBibleStudy } from "#/server/bible_study/deleteBibleStudy";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import { visibilityIcons } from "./NewCard";
+import { ScriptureBlock } from "./components/ScriptureBlock";
+import { BIBLE_VERSIONS } from "#/data/bible/bible_versions";
+
+const buildVerseReference = (
+  version: string,
+  book: string,
+  book_title: string | null,
+  chapter: number,
+  verseStart: number,
+  verseEnd: number | null,
+) => {
+  if (!book || !chapter || !verseStart) return "";
+  let ref = `${book_title || book} ${chapter}:${verseStart}`;
+  if (verseEnd && verseEnd !== verseStart) {
+    ref += `-${verseEnd}`;
+  }
+  if (version) {
+    ref += ` (${version})`;
+  }
+  return ref;
+};
+
 const BibleStudyPage = () => {
   const routeApi = getRouteApi("/_authed/study/$studyId");
   const bibleStudy = routeApi.useLoaderData();
@@ -110,6 +132,28 @@ const BibleStudyPage = () => {
         disabled={true}
         content={bibleStudy?.content || null}
       />
+
+      {bibleStudy?.verses && bibleStudy?.verses?.length > 0 && (
+        <section className="space-y-4">
+          <h2 className="text-xl md:text-2xl">Scripture References</h2>
+          {bibleStudy?.verses.map((verse, index) => (
+            <ScriptureBlock
+              key={index}
+              reference={buildVerseReference(
+                BIBLE_VERSIONS.find((v) => v.id === verse.version)
+                  ?.abbreviation || "",
+                verse.book,
+                verse.book_title || null,
+                verse.chapter,
+                verse.verse_start,
+                verse.verse_end,
+              )}
+              text={verse.verse_text || ""}
+            />
+          ))}
+        </section>
+      )}
+
       {bibleStudy?.creator_id === user?.id && (
         <div className="flex flex-col sm:flex-row gap-2 justify-center">
           <Button

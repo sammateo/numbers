@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import Header from "../components/Header";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { getUserSessionFn } from "#/auth/supabase";
 import type { RouterContext } from "#/router";
@@ -103,6 +104,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   wrapInSuspense: true,
 });
 
+//for tanstack query
+const queryClient = new QueryClient();
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   const data = useLoaderData({ from: "__root__" });
   const { isAuthenticated } = useRouteContext({ from: "__root__" });
@@ -121,33 +125,35 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         {/* <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} /> */}
         <HeadContent />
       </head>
-      <body className="font-sans antialiased w-screen wrap-anywhere selection:bg-[rgba(79,184,178,0.24)] flex bg-background">
-        {isAuthenticated ? (
-          <>
-            <SideBar />
-            <div className="flex-1">
-              <Header />
-              <div className={"px-4 py-2  h-[94vh] overflow-scroll"}>
-                {children}
+      <QueryClientProvider client={queryClient}>
+        <body className="font-sans antialiased w-screen wrap-anywhere selection:bg-[rgba(79,184,178,0.24)] flex bg-background">
+          {isAuthenticated ? (
+            <>
+              <SideBar />
+              <div className="flex-1">
+                <Header />
+                <div className={"px-4 py-2  h-[94vh] overflow-scroll"}>
+                  {children}
+                </div>
               </div>
-            </div>
-          </>
-        ) : (
-          <div className="flex-1">{children}</div>
-        )}
-        <TanStackDevtools
-          config={{
-            position: "bottom-right",
-          }}
-          plugins={[
-            {
-              name: "Tanstack Router",
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
-        <Scripts />
-      </body>
+            </>
+          ) : (
+            <div className="flex-1">{children}</div>
+          )}
+          <TanStackDevtools
+            config={{
+              position: "bottom-right",
+            }}
+            plugins={[
+              {
+                name: "Tanstack Router",
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+            ]}
+          />
+          <Scripts />
+        </body>
+      </QueryClientProvider>
     </html>
   );
 }

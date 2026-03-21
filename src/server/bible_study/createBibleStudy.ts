@@ -47,7 +47,7 @@ export const CreateBibleStudySchema = z.object({
   //   updated_at: z.string(),
 });
 
-export const createBibleStudy = createServerFn()
+export const createBibleStudy = createServerFn({ method: "POST" })
   .inputValidator(CreateBibleStudySchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient();
@@ -60,7 +60,7 @@ export const createBibleStudy = createServerFn()
       content: data.content,
       visibility: data.visibility,
     };
-    const { data: _, error } = await supabase
+    const { data: createdStudy, error } = await supabase
       .schema("numbers")
       .from("bible_studies")
       .insert(insertObject)
@@ -69,7 +69,9 @@ export const createBibleStudy = createServerFn()
       console.error(error);
       throw new Error(error.message);
     }
-    return `Created bible study: ${data.title}`;
+    console.log(`Created bible study: ${data.title}`);
+    return createdStudy[0].id;
+    // return `Created bible study: ${data.title}`;
   });
 
 // // Call from anywhere - components, loaders, hooks, etc.

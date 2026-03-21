@@ -4,7 +4,6 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaHome } from "react-icons/fa";
 import { FiPlusCircle, FiBookOpen } from "react-icons/fi";
 import { BsPerson } from "react-icons/bs";
-import { RiUserShared2Line } from "react-icons/ri";
 const SideBar = () => {
   const open = useNavigationBarStore((s) => s.open);
   const setOpen = useNavigationBarStore((s) => s.setOpen);

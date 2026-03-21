@@ -13,6 +13,8 @@ import { VerseInput } from "./VerseInput";
 import { MediaInput } from "./MediaInput";
 import { CollaboratorInput } from "./CollaboratorInput";
 import { updateBibleStudy } from "#/server/bible_study/updateBibleStudy";
+import { addBibleVerses } from "#/server/bible_verses/addBibleVerses";
+import { clearBibleVerses } from "#/server/bible_verses/clearBibleVerses";
 
 export function CreateStudyPage({
   type = "new",
@@ -34,6 +36,10 @@ export function CreateStudyPage({
   const setTopic = useCreateBibleStudyStore((s) => s.setTopic);
   const description = useCreateBibleStudyStore((s) => s.description);
   const setDescription = useCreateBibleStudyStore((s) => s.setDescription);
+
+  const verses = useCreateBibleStudyStore((s) => s.verses);
+  const setVerses = useCreateBibleStudyStore((s) => s.setVerses);
+
   const visibility = useCreateBibleStudyStore((s) => s.visibility);
   const setVisibility = useCreateBibleStudyStore((s) => s.setVisibility);
   const reset = useCreateBibleStudyStore((s) => s.reset);
@@ -47,7 +53,7 @@ export function CreateStudyPage({
   // allow user to publish study
   const enablePublish = title && description && content && !publishing;
 
-  const [verses, setVerses] = useState<any[]>([]);
+  // const [verses, setVerses] = useState<any[]>([]);
   const [media, setMedia] = useState<any[]>([]);
   const [collaborators, setCollaborators] = useState<any[]>([]);
   // const [visibility, setVisibility] = useState<"private" | "shared" | "public">(
@@ -69,11 +75,11 @@ export function CreateStudyPage({
   const handlePublish = async () => {
     const { title, topic, description, content, visibility } =
       useCreateBibleStudyStore.getState();
-
     try {
       setPublishing(true);
       if (type === "new") {
-        await createBibleStudy({
+        //create bible study
+        const createdStudyId = await createBibleStudy({
           data: {
             title,
             topic,
@@ -82,7 +88,24 @@ export function CreateStudyPage({
             visibility,
           },
         });
+
+        //add verses
+        await addBibleVerses({
+          data: verses.map((verse) => {
+            return {
+              study_id: createdStudyId,
+              version: verse.version,
+              book: verse.book,
+              book_title: verse.book_title || null,
+              chapter: verse.chapter,
+              verse_start: verse.verse_start,
+              verse_end: verse.verse_end,
+              verse_text: verse.verse_text,
+            };
+          }),
+        });
       } else if (type === "edit") {
+        //update
         await updateBibleStudy({
           data: {
             id: study_id || "",
@@ -93,16 +116,45 @@ export function CreateStudyPage({
             visibility,
           },
         });
+
+        //clear current verses
+        await clearBibleVerses({
+          data: {
+            study_id: study_id || "",
+          },
+        });
+        //insert new verses
+        await addBibleVerses({
+          data: verses.map((verse) => {
+            return {
+              study_id: study_id || "",
+              version: verse.version,
+              book: verse.book,
+              book_title: verse.book_title || null,
+              chapter: verse.chapter,
+              verse_start: verse.verse_start,
+              verse_end: verse.verse_end,
+              verse_text: verse.verse_text,
+            };
+          }),
+        });
       }
       setPublishing(false);
       reset();
+      if (type === "edit") {
+        navigate({
+          to: "/study/$studyId",
+          params: {
+            studyId: study_id || "",
+          },
+        });
+        return;
+      }
       navigate({ to: "/study" });
     } catch (error) {
       setPublishing(false);
       console.error(error);
     }
-    // Mock publish functionality
-    // navigate("/dashboard");
   };
 
   const visibilityOptions = [
@@ -191,13 +243,13 @@ export function CreateStudyPage({
           />
         </div>
 
-        {/* <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
+        <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
           <h3 className="text-base md:text-lg">Scripture References</h3>
           <p className="text-sm text-muted-foreground">
             Add key verses that support your study
           </p>
           <VerseInput verses={verses} onChange={setVerses} />
-        </div> */}
+        </div>
 
         {/* <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
           <h3 className="text-base md:text-lg">Media & Resources</h3>
