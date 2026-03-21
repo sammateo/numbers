@@ -12,15 +12,15 @@ import Button from "#/ui/button/Button";
 import { deleteBibleStudy } from "#/server/bible_study/deleteBibleStudy";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
-import { useCreateBibleStudyStore } from "#/store/useCreateBibleStudyStore";
+import { visibilityIcons } from "./NewCard";
 const BibleStudyPage = () => {
   const routeApi = getRouteApi("/_authed/study/$studyId");
   const bibleStudy = routeApi.useLoaderData();
   const [deleting, setDeleting] = useState<boolean>(false);
   const navigate = useNavigate();
   const { user } = useRouteContext({ from: "__root__" });
+  const VisibilityIcon = visibilityIcons[bibleStudy?.visibility || "private"];
 
-  const setTitle = useCreateBibleStudyStore((s) => s.setTitle);
   return (
     <div className="lg:max-w-5xl pt-4 mx-auto flex flex-col items-stretch gap-5">
       <Link
@@ -67,6 +67,14 @@ const BibleStudyPage = () => {
 
           <span className="hidden sm:inline">•</span>
           <div className="flex items-center gap-2">
+            <VisibilityIcon className="w-4 h-4" />
+            <span className="text-sm md:text-base">
+              {bibleStudy?.visibility}
+            </span>
+          </div>
+
+          <span className="hidden sm:inline">•</span>
+          <div className="flex items-center gap-2">
             <CiCalendar className="w-4 h-4" />
             <span className="text-sm md:text-base">
               {bibleStudy?.updated_at &&
@@ -107,7 +115,6 @@ const BibleStudyPage = () => {
           <Button
             className="w-full sm:w-auto flex gap-2 items-center"
             onClick={async () => {
-              setTitle(bibleStudy?.title || "");
               navigate({
                 to: "/study/edit/$studyId",
                 params: {
@@ -116,7 +123,6 @@ const BibleStudyPage = () => {
               });
             }}
           >
-            {/* {deleting && <LoaderCircle className="animate-spin size-5" />} */}
             <span>Edit Study</span>
           </Button>
           <Button

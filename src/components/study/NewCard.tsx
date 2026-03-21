@@ -3,6 +3,12 @@ import { Link } from "@tanstack/react-router";
 import { CiGlobe } from "react-icons/ci";
 import { GoLock } from "react-icons/go";
 import { LuUsers } from "react-icons/lu";
+
+export const visibilityIcons = {
+  private: GoLock,
+  shared: LuUsers,
+  public: CiGlobe,
+};
 const NewCard = ({
   id,
   title,
@@ -13,12 +19,6 @@ const NewCard = ({
   creator,
   collaborators,
 }: FullBibleStudy) => {
-  const visibilityIcons = {
-    private: GoLock,
-    shared: LuUsers,
-    public: CiGlobe,
-  };
-
   const VisibilityIcon = visibilityIcons[visibility];
   return (
     <Link to="/study/$studyId" params={{ studyId: id }} className="block group">
