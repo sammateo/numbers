@@ -170,14 +170,17 @@ export default ({
     if (JSON.stringify(current) !== JSON.stringify(content)) {
       editor.commands.setContent(content as Content);
     }
-    const updateHandler = ({ editor }: { editor: Editor }) => {
-      if (setContent) setContent(editor.getJSON());
-    };
-    editor.on("update", updateHandler);
-    return () => {
-      editor.off("update", updateHandler);
-    };
+
+    // return () => {
+    //   editor.off("update", updateHandler);
+    // };
   }, [editor, content]);
+
+  //update content value when editor value changes
+  const updateHandler = ({ editor }: { editor: Editor }) => {
+    if (setContent) setContent(editor.getJSON());
+  };
+  editor.on("update", updateHandler);
 
   return (
     <div
