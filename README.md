@@ -1,193 +1,208 @@
-Welcome to your new TanStack Start app! 
+# 📖 Bible Study App
 
-# Getting Started
+A modern, collaborative Bible study application built with a focus on **rich content creation**, **scripture organization**, and **user collaboration**.
 
-To run this application:
+Users can create structured Bible studies, add verses and media, write rich text content, and share studies with others using a unique `@username` system.
+
+---
+
+## ✨ Features
+
+### 🔐 Authentication & Onboarding
+
+- User authentication
+- Custom onboarding flow
+- Unique `@username` system (Instagram-style)
+- Profile management
+
+### 📚 Bible Study Creation
+
+- Create and edit Bible studies
+- Add:
+  - Topic
+  - Description
+  - Scripture references (book, chapter, verses)
+  - Media (YouTube, links, images)
+
+- Rich text editor for long-form study content
+
+### 🤝 Collaboration
+
+- Share studies with other users via `@username`
+- Role-based access:
+  - Viewer
+  - Editor
+
+### 🧠 Smart Features
+
+- Username availability checking
+- Structured verse storage
+- Secure access using Row Level Security (RLS)
+
+---
+
+## 🏗️ Tech Stack
+
+- **Frontend**: React + TanStack Start
+- **State Management**: Zustand
+- **State Machines**: XState
+- **Backend / DB**: Supabase (PostgreSQL)
+- **Rich Text Editor**: Tiptap
+
+---
+
+## 🗂️ Database Overview
+
+All tables live in the `numbers` schema.
+
+### Tables
+
+- `profiles` → user profiles with usernames
+- `bible_studies` → main study data
+- `bible_study_verses` → scripture references
+- `bible_study_media` → videos, images, links
+- `bible_study_collaborators` → sharing and permissions
+
+---
+
+## 🔐 Security
+
+This project uses **Supabase Row Level Security (RLS)** to enforce access control:
+
+- Users can only access studies they own or are shared on
+- Users can only modify their own content (or based on role)
+- All queries respect `auth.uid()` via JWT
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repo
 
 ```bash
-bun install
-bun --bun run dev
+git clone https://github.com/your-username/bible-study-app.git
+cd bible-study-app
 ```
 
-# Building For Production
+---
 
-To build this application for production:
+### 2. Install dependencies
 
 ```bash
-bun --bun run build
+npm install
 ```
 
-## Testing
+---
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+### 3. Setup environment variables
+
+Create a `.env` file:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
+HOST_URL=http://localhost:port
+YOUVERSION_API_KEY=your_youversion_api_key
+```
+
+---
+
+### 4. Setup Supabase
+
+- Create a Supabase project
+- Run the SQL schema (tables, RLS policies)
+- Ensure the `numbers` schema exists
+
+---
+
+### 5. Run the app
 
 ```bash
-bun --bun run test
+npm run dev
 ```
 
-## Styling
+---
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+## 🧭 Project Structure
 
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `bun install @tailwindcss/vite tailwindcss -D`
-
-
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```
+src/
+ ├ routes/              # TanStack routes
+ ├ components/          # UI components
+ ├ stores/              # Zustand stores
+ ├ machines/            # XState machines
+ ├ lib/                 # Supabase clients, utilities
+ ├ types/               # TypeScript types
+ └ server/              # Server functions
 ```
 
-Then anywhere in your JSX you can use it like so:
+---
 
-```tsx
-<Link to="/about">About</Link>
+## 🔄 Application Flow
+
+```
+User logs in
+     ↓
+Profile loaded
+     ↓
+No username?
+     ↓
+Onboarding flow (XState)
+     ↓
+Create @username
+     ↓
+Dashboard
+     ↓
+Create / Share Bible Studies
 ```
 
-This will create a link that will navigate to the `/about` route.
+---
 
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
+## ✍️ Editor Experience
 
-### Using A Layout
+- Built with Tiptap
+- Supports structured rich text
+- Designed for long-form study content
+- Easily extendable for:
+  - notes
+  - highlights
+  - collaboration
 
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
+---
 
-Here is an example layout that includes a header:
+## 📌 Future Improvements
 
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+- 🔍 Full-text search (studies, verses)
+- 📖 Bible API integration for verse lookup
+- 💬 Comments & discussions
+- 🌐 Public study sharing
+- 📱 Mobile responsive design
+- 🤝 Real-time collaboration
 
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
+---
 
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
+## 🧠 Design Goals
 
-## Server Functions
+- Clean and distraction-free reading experience
+- Structured + flexible study creation
+- Collaboration-first workflow
+- Scalable architecture
 
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
+---
 
-```tsx
-import { createServerFn } from '@tanstack/react-start'
+## 📄 License
 
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
+MIT License
 
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
+---
 
-## API Routes
+## 🙌 Contributions
 
-You can create API routes by using the `server` property in your route definitions:
+Contributions are welcome!
+Feel free to open issues or submit pull requests.
 
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
+---
 
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
+## 📬 Contact
 
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+If you have questions or ideas, feel free to reach out or open an issue.
