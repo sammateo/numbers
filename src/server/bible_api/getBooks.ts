@@ -26,3 +26,29 @@ export const getBooks = createServerFn()
       console.error(error);
     }
   });
+
+const GetScriptureSchema = z.object({
+  version_id: z.number(),
+  book_id: z.string(),
+  chapter: z.number(),
+  verse_start: z.number(),
+  verse_end: z.number().nullable(),
+});
+
+export const getScripture = createServerFn()
+  .inputValidator(GetScriptureSchema)
+  .handler(async ({ data }) => {
+    try {
+      const verse_end = data.verse_end ? `-${data.verse_end}` : "";
+      const usfmString = `${data.book_id}.${data.chapter}.${data.verse_start}${verse_end}`;
+      const passage = await bibleClient.getPassage(
+        data.version_id,
+        usfmString,
+        "text",
+      );
+      return passage.content;
+    } catch (error) {
+      console.error(error);
+      return "";
+    }
+  });

@@ -1,17 +1,10 @@
 import { useState } from "react";
 import { X, Plus } from "lucide-react";
-import { BIBLE_BOOKS } from "#/data/bible/bible_books";
 import type { BibleStudyVerse } from "#/types";
 import { BIBLE_VERSIONS } from "#/data/bible/bible_versions";
 import { useServerFn } from "@tanstack/react-start";
-import { getBooks } from "#/server/bible_api/getBooks";
+import { getBooks, getScripture } from "#/server/bible_api/getBooks";
 import { useQuery } from "@tanstack/react-query";
-
-interface Verse {
-  id: string;
-  reference: string;
-  text: string;
-}
 
 interface VerseInputProps {
   verses: BibleStudyVerse[];
@@ -19,7 +12,7 @@ interface VerseInputProps {
 }
 
 export function VerseInput({ verses, onChange }: VerseInputProps) {
-  const [selectedVersion, setSelectedVersion] = useState(1);
+  const [selectedVersion, setSelectedVersion] = useState(BIBLE_VERSIONS[0].id);
   const [selectedBook, setSelectedBook] = useState("");
   const [selectedChapter, setSelectedChapter] = useState("");
   const [selectedVerseStart, setSelectedVerseStart] = useState("");
@@ -36,6 +29,37 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
           version_id: selectedVersion,
         },
       }),
+    enabled: !!selectedVersion,
+  });
+
+  const getPassageTrigger = useServerFn(getScripture);
+  const { data: fetchedPassage } = useQuery({
+    queryKey: [
+      "books",
+      {
+        selectedVersion,
+        selectedBook,
+        selectedChapter,
+        selectedVerseStart,
+        selectedVerseEnd,
+      },
+    ],
+    queryFn: () =>
+      getPassageTrigger({
+        data: {
+          version_id: selectedVersion,
+          book_id: selectedBook,
+          chapter: Number(selectedChapter),
+          verse_start: Number(selectedVerseStart),
+          verse_end: Number(selectedVerseEnd),
+        },
+      }),
+    enabled: !!(
+      selectedVersion &&
+      selectedBook &&
+      selectedChapter &&
+      selectedVerseStart
+    ),
   });
 
   //get chapters for book
@@ -63,8 +87,9 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
       !selectedVerseStart
     )
       return "";
+    const formattedBook = fetchedBooks?.data.find((b) => b.id === selectedBook);
 
-    let ref = `${selectedBook} ${selectedChapter}:${selectedVerseStart}`;
+    let ref = `${formattedBook?.title || selectedBook} ${selectedChapter}:${selectedVerseStart}`;
     if (selectedVerseEnd && selectedVerseEnd !== selectedVerseStart) {
       ref += `-${selectedVerseEnd}`;
     }
@@ -77,8 +102,8 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
     verseEnd: number | null,
   ) => {
     if (!book || !chapter || !verseStart) return "";
-
-    let ref = `${book} ${chapter}:${verseStart}`;
+    const formattedBook = fetchedBooks?.data.find((b) => b.id === book);
+    let ref = `${formattedBook?.title || book} ${chapter}:${verseStart}`;
     if (verseEnd && verseEnd !== verseStart) {
       ref += `-${verseEnd}`;
     }
@@ -87,7 +112,7 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
 
   const addVerse = () => {
     const reference = buildReference();
-    if (reference && text.trim()) {
+    if (reference && fetchedPassage?.trim()) {
       onChange([
         ...verses,
         {
@@ -97,7 +122,7 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
           chapter: Number(selectedChapter),
           verse_start: Number(selectedVerseStart),
           verse_end: Number(selectedVerseEnd),
-          verse_text: text.trim(),
+          verse_text: fetchedPassage?.trim(),
         },
       ]);
       // Reset form
@@ -116,7 +141,7 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
   const handleVersionChange = (value: string) => {
     setSelectedVersion(Number(value));
     //get books for the version
-    console.log(fetchedBooks);
+    // console.log(fetchedBooks);
   };
 
   const handleBookChange = (value: string) => {
@@ -198,34 +223,14 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
             className="px-4 py-2 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="">End (optional)</option>
-            {verseOptions.map((verse) => (
-              <option key={verse} value={verse}>
-                {verse}
-              </option>
-            ))}
+            {verseOptions
+              .filter((v) => v > Number(selectedVerseStart))
+              .map((verse) => (
+                <option key={verse} value={verse}>
+                  {verse}
+                </option>
+              ))}
           </select>
-
-          {/* <input
-            type="number"
-            min="1"
-            max="176"
-            value={selectedVerseStart}
-            onChange={(e) => setSelectedVerseStart(e.target.value)}
-            disabled={!selectedChapter}
-            placeholder="Verse"
-            className="px-4 py-2 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
-          /> */}
-
-          {/* <input
-            type="number"
-            min="1"
-            max="176"
-            value={selectedVerseEnd}
-            onChange={(e) => setSelectedVerseEnd(e.target.value)}
-            disabled={!selectedVerseStart}
-            placeholder="End (optional)"
-            className="px-4 py-2 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
-          /> */}
         </div>
 
         {/* Current Reference Preview */}
@@ -241,15 +246,19 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
         <div className="flex gap-2">
           <input
             type="text"
-            value={text}
+            // value={text}
+            value={fetchedPassage || text}
+            disabled
             onChange={(e) => setText(e.target.value)}
             placeholder="Enter verse text (e.g., For God so loved the world...)"
-            className="flex-1 px-4 py-2 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="flex-1 px-4 py-2 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed"
           />
           <button
             type="button"
             onClick={addVerse}
-            disabled={!buildReference() || !text.trim()}
+            disabled={
+              !buildReference() || (!text.trim() && !fetchedPassage?.trim())
+            }
             className="px-3 md:px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus className="w-5 h-5" />

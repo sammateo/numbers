@@ -4,9 +4,9 @@ export const BIBLE_VERSIONS = [
     abbreviation: "NIV",
     title: "New International Version",
   },
-  {
-    id: 1,
-    abbreviation: "KJV",
-    title: "King James Version",
-  },
+  //   {
+  //     id: 1,
+  //     abbreviation: "KJV",
+  //     title: "King James Version",
+  //   },
 ];
