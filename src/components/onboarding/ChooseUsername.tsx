@@ -25,25 +25,6 @@ const userNameSchema = z.object({
 const ChooseUsername = ({ next, back }: ButtonNavigationInterface) => {
   const { firstName, username, setUsername } = useUserStore();
 
-  // const [available, setAvailable] = useState<boolean>(false);
-
-  // //check username availability
-  // useEffect(() => {
-  //   const timeout = setTimeout(async () => {
-  //     if (!username) return;
-
-  //     const result = await checkUsername({
-  //       data: {
-  //         username,
-  //       },
-  //     });
-
-  //     setAvailable(result);
-  //   }, 400);
-
-  //   return () => clearTimeout(timeout);
-  // }, [username]);
-
   const form = useForm({
     defaultValues: {
       userName: username,
