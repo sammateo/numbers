@@ -7,6 +7,10 @@ import OnboardingCard from "./OnboardingCard";
 import OnboardingTitle from "./OnboardingTitle";
 import { useForm } from "@tanstack/react-form-start";
 import InputValidationErrors from "#/ui/input/InputValidationErrors";
+import { checkUsername } from "#/server/account/checkUsername";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { LoaderCircleIcon } from "lucide-react";
 const userNameSchema = z.object({
   userName: z
     .string()
@@ -21,6 +25,25 @@ const userNameSchema = z.object({
 const ChooseUsername = ({ next, back }: ButtonNavigationInterface) => {
   const { firstName, username, setUsername } = useUserStore();
 
+  // const [available, setAvailable] = useState<boolean>(false);
+
+  // //check username availability
+  // useEffect(() => {
+  //   const timeout = setTimeout(async () => {
+  //     if (!username) return;
+
+  //     const result = await checkUsername({
+  //       data: {
+  //         username,
+  //       },
+  //     });
+
+  //     setAvailable(result);
+  //   }, 400);
+
+  //   return () => clearTimeout(timeout);
+  // }, [username]);
+
   const form = useForm({
     defaultValues: {
       userName: username,
@@ -29,6 +52,24 @@ const ChooseUsername = ({ next, back }: ButtonNavigationInterface) => {
       onChange: userNameSchema,
     },
   });
+
+  const checkUsernameTrigger = useServerFn(checkUsername);
+  const {
+    data: available,
+    isPending: usernameCheckPending,
+    isEnabled: userNameCheckEnabled,
+  } = useQuery({
+    queryKey: ["checkUsername", username],
+    queryFn: async () =>
+      await checkUsernameTrigger({
+        data: {
+          username,
+        },
+      }),
+    enabled: !!username && form.state.canSubmit,
+  });
+
+  const userNameCheckStatus = available && !usernameCheckPending;
 
   return (
     <>
@@ -68,13 +109,28 @@ const ChooseUsername = ({ next, back }: ButtonNavigationInterface) => {
             )}
           </form.Field>
 
+          <div>
+            {!userNameCheckEnabled ? (
+              <span></span>
+            ) : userNameCheckEnabled && usernameCheckPending ? (
+              <span className="flex items-center gap-x-2 text-primary">
+                checking availability{" "}
+                <LoaderCircleIcon className="animate-spin" />
+              </span>
+            ) : available ? (
+              <span className="text-primary">username available</span>
+            ) : (
+              <span className="text-destructive">username unavailable</span>
+            )}
+          </div>
+
           <form.Subscribe
             selector={(state) => [state.canSubmit]}
             children={([canSubmit]) => (
               <ButtonNavigation
                 next={{
                   ...next!,
-                  disabled: !username || !canSubmit,
+                  disabled: !username || !canSubmit || !userNameCheckStatus,
                 }}
                 back={back}
               />
