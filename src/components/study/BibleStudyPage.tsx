@@ -113,7 +113,8 @@ const BibleStudyPage = () => {
             {bibleStudy?.collaborators.map((collab) => (
               <Link
                 key={collab.id}
-                to="/study"
+                to="/study/$studyId"
+                params={{ studyId: bibleStudy.id }}
                 // to={`/profile/${collab.user.username}`}
                 className="flex items-center gap-1.5 px-2 py-1 bg-secondary rounded-full hover:bg-muted transition-colors"
               >

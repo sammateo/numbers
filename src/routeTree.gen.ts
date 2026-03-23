@@ -20,6 +20,7 @@ import { Route as AuthedTestRouteImport } from './routes/_authed/test'
 import { Route as AuthedProfileRouteImport } from './routes/_authed/profile'
 import { Route as AuthedOnboardingRouteImport } from './routes/_authed/onboarding'
 import { Route as AuthedStudyIndexRouteImport } from './routes/_authed/study/index'
+import { Route as AuthedSharedIndexRouteImport } from './routes/_authed/shared/index'
 import { Route as AuthedStudyNewRouteImport } from './routes/_authed/study/new'
 import { Route as AuthedStudyStudyIdRouteImport } from './routes/_authed/study/$studyId'
 import { Route as AuthedStudyEditStudyIdRouteImport } from './routes/_authed/study/edit/$studyId'
@@ -78,6 +79,11 @@ const AuthedStudyIndexRoute = AuthedStudyIndexRouteImport.update({
   path: '/study/',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedSharedIndexRoute = AuthedSharedIndexRouteImport.update({
+  id: '/shared/',
+  path: '/shared/',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedStudyNewRoute = AuthedStudyNewRouteImport.update({
   id: '/study/new',
   path: '/study/new',
@@ -106,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/blog/': typeof BlogIndexRoute
   '/study/$studyId': typeof AuthedStudyStudyIdRoute
   '/study/new': typeof AuthedStudyNewRoute
+  '/shared/': typeof AuthedSharedIndexRoute
   '/study/': typeof AuthedStudyIndexRoute
   '/study/edit/$studyId': typeof AuthedStudyEditStudyIdRoute
 }
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/study/$studyId': typeof AuthedStudyStudyIdRoute
   '/study/new': typeof AuthedStudyNewRoute
+  '/shared': typeof AuthedSharedIndexRoute
   '/study': typeof AuthedStudyIndexRoute
   '/study/edit/$studyId': typeof AuthedStudyEditStudyIdRoute
 }
@@ -138,6 +146,7 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/_authed/study/$studyId': typeof AuthedStudyStudyIdRoute
   '/_authed/study/new': typeof AuthedStudyNewRoute
+  '/_authed/shared/': typeof AuthedSharedIndexRoute
   '/_authed/study/': typeof AuthedStudyIndexRoute
   '/_authed/study/edit/$studyId': typeof AuthedStudyEditStudyIdRoute
 }
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/study/$studyId'
     | '/study/new'
+    | '/shared/'
     | '/study/'
     | '/study/edit/$studyId'
   fileRoutesByTo: FileRoutesByTo
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/blog'
     | '/study/$studyId'
     | '/study/new'
+    | '/shared'
     | '/study'
     | '/study/edit/$studyId'
   id:
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/_authed/study/$studyId'
     | '/_authed/study/new'
+    | '/_authed/shared/'
     | '/_authed/study/'
     | '/_authed/study/edit/$studyId'
   fileRoutesById: FileRoutesById
@@ -279,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedStudyIndexRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/shared/': {
+      id: '/_authed/shared/'
+      path: '/shared'
+      fullPath: '/shared/'
+      preLoaderRoute: typeof AuthedSharedIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/study/new': {
       id: '/_authed/study/new'
       path: '/study/new'
@@ -309,6 +328,7 @@ interface AuthedRouteChildren {
   AuthedTestRoute: typeof AuthedTestRoute
   AuthedStudyStudyIdRoute: typeof AuthedStudyStudyIdRoute
   AuthedStudyNewRoute: typeof AuthedStudyNewRoute
+  AuthedSharedIndexRoute: typeof AuthedSharedIndexRoute
   AuthedStudyIndexRoute: typeof AuthedStudyIndexRoute
   AuthedStudyEditStudyIdRoute: typeof AuthedStudyEditStudyIdRoute
 }
@@ -319,6 +339,7 @@ const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedTestRoute: AuthedTestRoute,
   AuthedStudyStudyIdRoute: AuthedStudyStudyIdRoute,
   AuthedStudyNewRoute: AuthedStudyNewRoute,
+  AuthedSharedIndexRoute: AuthedSharedIndexRoute,
   AuthedStudyIndexRoute: AuthedStudyIndexRoute,
   AuthedStudyEditStudyIdRoute: AuthedStudyEditStudyIdRoute,
 }

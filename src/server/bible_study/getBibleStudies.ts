@@ -49,9 +49,47 @@ export const getCompleteBibleStudies = createServerFn()
       .eq("creator_id", data.creator_id)
       .order("created_at", { ascending: false })
       .overrideTypes<Array<FullBibleStudy>>();
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+    return bible_studies;
+  });
 
-    // .maybeSingle<FullBibleStudy>();
+/**
+ * Get List of Bible Studies shared with user
+ */
+export const getCompleteSharedBibleStudies = createServerFn()
+  .inputValidator(GetBibleStudiesSchema)
+  .handler(async ({ data }) => {
+    const supabase = getSupabaseServerClient();
 
+    const { data: collabs } = await supabase
+      .schema("numbers")
+      .from("bible_study_collaborators")
+      .select("study_id")
+      .eq("user_id", data.creator_id);
+
+    const { data: bible_studies, error } = await supabase
+      .schema("numbers")
+
+      .from("bible_studies")
+      .select(
+        `
+      *,
+      creator:profiles!creator_id (*),
+      verses:bible_study_verses (*),
+      media:bible_study_media (*),
+      collaborators:bible_study_collaborators (
+        *,
+        user:profiles!user_id (*)
+      )
+    `,
+      )
+      .in("id", collabs?.map((c) => c.study_id) ?? [])
+      .neq("visibility", "private")
+      .order("created_at", { ascending: false })
+      .overrideTypes<Array<FullBibleStudy>>();
     if (error) {
       console.error(error);
       throw error;

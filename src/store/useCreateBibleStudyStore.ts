@@ -1,6 +1,7 @@
 import type {
   BibleStudyVerse,
   FullBibleStudy,
+  FullBibleStudyCollaborator,
   RichTextContent,
   StudyVisibility,
 } from "#/types";
@@ -11,6 +12,7 @@ type CreateBibleStudyState = FullBibleStudy & {
   setDescription: (description: string) => void;
   setContent: (content: RichTextContent | null) => void;
   setVerses: (verses: BibleStudyVerse[]) => void;
+  setCollaborators: (collaborators: FullBibleStudyCollaborator[]) => void;
   setVisibility: (visibility: StudyVisibility) => void;
   reset: () => void;
 };
@@ -43,6 +45,7 @@ export const useCreateBibleStudyStore = create<CreateBibleStudyState>(
     setDescription: (description) => set({ description }),
     setContent: (content) => set({ content }),
     setVerses: (verses) => set({ verses }),
+    setCollaborators: (collaborators) => set({ collaborators }),
     setVisibility: (visibility) => set({ visibility }),
     reset: () =>
       set({

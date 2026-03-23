@@ -15,6 +15,8 @@ import { CollaboratorInput } from "./CollaboratorInput";
 import { updateBibleStudy } from "#/server/bible_study/updateBibleStudy";
 import { addBibleVerses } from "#/server/bible_verses/addBibleVerses";
 import { clearBibleVerses } from "#/server/bible_verses/clearBibleVerses";
+import { addBibleStudyCollaborators } from "#/server/bible_study_collaborators/addBibleStudyCollaborators";
+import { clearBibleStudyCollaborators } from "#/server/bible_study_collaborators/clearBibleStudyCollaborators";
 
 export function CreateStudyPage({
   type = "new",
@@ -40,6 +42,9 @@ export function CreateStudyPage({
   const verses = useCreateBibleStudyStore((s) => s.verses);
   const setVerses = useCreateBibleStudyStore((s) => s.setVerses);
 
+  const collaborators = useCreateBibleStudyStore((s) => s.collaborators);
+  const setCollaborators = useCreateBibleStudyStore((s) => s.setCollaborators);
+
   const visibility = useCreateBibleStudyStore((s) => s.visibility);
   const setVisibility = useCreateBibleStudyStore((s) => s.setVisibility);
   const reset = useCreateBibleStudyStore((s) => s.reset);
@@ -55,7 +60,6 @@ export function CreateStudyPage({
 
   // const [verses, setVerses] = useState<any[]>([]);
   const [media, setMedia] = useState<any[]>([]);
-  const [collaborators, setCollaborators] = useState<any[]>([]);
   // const [visibility, setVisibility] = useState<"private" | "shared" | "public">(
   //   "private",
   // );
@@ -104,6 +108,17 @@ export function CreateStudyPage({
             };
           }),
         });
+
+        //add collaborators
+        await addBibleStudyCollaborators({
+          data: collaborators.map((collaborator) => {
+            return {
+              study_id: createdStudyId,
+              user_id: collaborator.user.id,
+              role: collaborator.role,
+            };
+          }),
+        });
       } else if (type === "edit") {
         //update
         await updateBibleStudy({
@@ -135,6 +150,23 @@ export function CreateStudyPage({
               verse_start: verse.verse_start,
               verse_end: verse.verse_end,
               verse_text: verse.verse_text,
+            };
+          }),
+        });
+
+        //clear collaborators
+        await clearBibleStudyCollaborators({
+          data: {
+            study_id: study_id || "",
+          },
+        });
+        //add collaborators
+        await addBibleStudyCollaborators({
+          data: collaborators.map((collaborator) => {
+            return {
+              study_id: study_id || "",
+              user_id: collaborator.user.id,
+              role: collaborator.role,
             };
           }),
         });
@@ -259,16 +291,18 @@ export function CreateStudyPage({
           <MediaInput media={media} onChange={setMedia} />
         </div> */}
 
-        {/* <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
-          <h3 className="text-base md:text-lg">Collaborators</h3>
-          <p className="text-sm text-muted-foreground">
-            Invite others to contribute to this study
-          </p>
-          <CollaboratorInput
-            collaborators={collaborators}
-            onChange={setCollaborators}
-          />
-        </div> */}
+        {visibility !== "private" && (
+          <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
+            <h3 className="text-base md:text-lg">Viewers</h3>
+            <p className="text-sm text-muted-foreground">
+              Invite others to view to this study
+            </p>
+            <CollaboratorInput
+              collaborators={collaborators}
+              onChange={setCollaborators}
+            />
+          </div>
+        )}
 
         <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
           <h3 className="text-base md:text-lg">Visibility</h3>
@@ -276,32 +310,34 @@ export function CreateStudyPage({
             * feature still under construction (all bible studies will be
             treated as private until feature is completed)
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {visibilityOptions.map((option) => {
-              const Icon = option.icon;
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => setVisibility(option.value)}
-                  className={`p-4 border-2 rounded-lg transition-all text-left ${
-                    visibility === option.value
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <Icon
-                    className={`w-5 h-5 mb-2 ${visibility === option.value ? "text-primary" : "text-muted-foreground"}`}
-                  />
-                  <div className="font-medium text-sm md:text-base">
-                    {option.label}
-                  </div>
-                  <div className="text-xs md:text-sm text-muted-foreground">
-                    {option.description}
-                  </div>
-                </button>
-              );
-            })}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {visibilityOptions
+              .filter((option) => option.value !== "public")
+              .map((option) => {
+                const Icon = option.icon;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setVisibility(option.value)}
+                    className={`p-4 border-2 rounded-lg transition-all text-left ${
+                      visibility === option.value
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <Icon
+                      className={`w-5 h-5 mb-2 ${visibility === option.value ? "text-primary" : "text-muted-foreground"}`}
+                    />
+                    <div className="font-medium text-sm md:text-base">
+                      {option.label}
+                    </div>
+                    <div className="text-xs md:text-sm text-muted-foreground">
+                      {option.description}
+                    </div>
+                  </button>
+                );
+              })}
           </div>
         </div>
 

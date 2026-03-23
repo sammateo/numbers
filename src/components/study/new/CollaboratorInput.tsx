@@ -1,23 +1,14 @@
 import { useState } from "react";
 import { X, UserPlus } from "lucide-react";
-
-interface Collaborator {
-  username: string;
-  name: string;
-}
+import { searchUserProfiles } from "#/server/account/getUserProfile";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import type { FullBibleStudyCollaborator } from "#/types";
 
 interface CollaboratorInputProps {
-  collaborators: Collaborator[];
-  onChange: (collaborators: Collaborator[]) => void;
+  collaborators: FullBibleStudyCollaborator[];
+  onChange: (collaborators: FullBibleStudyCollaborator[]) => void;
 }
-
-// Mock user suggestions
-const mockUsers = [
-  { username: "sarahj", name: "Sarah Johnson" },
-  { username: "mchen", name: "Michael Chen" },
-  { username: "emilyr", name: "Emily Rodriguez" },
-  { username: "davidk", name: "David Kim" },
-];
 
 export function CollaboratorInput({
   collaborators,
@@ -26,21 +17,39 @@ export function CollaboratorInput({
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const filteredUsers = mockUsers.filter(
-    (user) =>
-      !collaborators.some((c) => c.username === user.username) &&
-      (user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.name.toLowerCase().includes(searchTerm.toLowerCase())),
-  );
+  const searchUserProfilesTrigger = useServerFn(searchUserProfiles);
+  const {
+    data: foundUsers,
+    // isPending: usernameCheckPending,
+    // isEnabled: userNameCheckEnabled,
+  } = useQuery({
+    queryKey: ["searchUserProfiles", searchTerm],
+    queryFn: async () =>
+      await searchUserProfilesTrigger({
+        data: {
+          username: searchTerm,
+        },
+      }),
+    enabled: !!searchTerm,
+  });
 
-  const addCollaborator = (user: Collaborator) => {
+  const filteredUsers =
+    foundUsers?.filter(
+      (user) =>
+        !collaborators.some((c) => c.user.username === user.username) &&
+        user.username.toLowerCase().includes(searchTerm.toLowerCase()),
+      // ||
+      // user.name.toLowerCase().includes(searchTerm.toLowerCase())),
+    ) ?? [];
+
+  const addCollaborator = (user: FullBibleStudyCollaborator) => {
     onChange([...collaborators, user]);
     setSearchTerm("");
     setShowSuggestions(false);
   };
 
   const removeCollaborator = (username: string) => {
-    onChange(collaborators.filter((c) => c.username !== username));
+    onChange(collaborators.filter((c) => c.user.username !== username));
   };
 
   return (
@@ -69,14 +78,25 @@ export function CollaboratorInput({
               <button
                 key={user.username}
                 type="button"
-                onClick={() => addCollaborator(user)}
+                onClick={() =>
+                  addCollaborator({
+                    user: user,
+                    id: "",
+                    study_id: "",
+                    user_id: user.id,
+                    role: "viewer",
+                    created_at: "",
+                  })
+                }
                 className="w-full flex items-center gap-3 px-4 py-3 hover:bg-secondary transition-colors text-left"
               >
                 <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-accent-foreground text-sm">
-                  {user.name.charAt(0)}
+                  {user?.username?.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="truncate">{user.name}</div>
+                  <div className="truncate">
+                    {/* {user?.first_name} {user?.last_name} */}
+                  </div>
                   <div className="text-sm text-muted-foreground truncate">
                     @{user.username}
                   </div>
@@ -92,16 +112,16 @@ export function CollaboratorInput({
         <div className="flex flex-wrap gap-2">
           {collaborators.map((collab) => (
             <div
-              key={collab.username}
+              key={collab.user.username}
               className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-full"
             >
               <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center text-accent-foreground text-xs">
-                {collab.name.charAt(0)}
+                {collab.user.username.charAt(0)}
               </div>
-              <span className="text-sm">@{collab.username}</span>
+              <span className="text-sm">@{collab.user.username}</span>
               <button
                 type="button"
-                onClick={() => removeCollaborator(collab.username)}
+                onClick={() => removeCollaborator(collab.user.username)}
                 className="p-0.5 hover:bg-background rounded-full transition-colors"
               >
                 <X className="w-3 h-3" />
