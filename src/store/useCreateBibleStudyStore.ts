@@ -59,6 +59,8 @@ export const useCreateBibleStudyStore = create<CreateBibleStudyState>(
         created_at: "",
         updated_at: "",
         verses: [],
+        collaborators: [],
+        media: [],
       }),
   }),
 );
