@@ -17,7 +17,7 @@ const SharedStudiesPage = () => {
           </p>
         </div>
       </div>
-      {(!data || data.length === 0) && <NoBibleStudies />}
+      {(!data || data.length === 0) && <NoBibleStudies type="shared" />}
       {data && data.length > 0 && (
         <div className="flex flex-col items-stretch gap-5">
           <h3 className="font-semibold text-lg">Shared Studies</h3>

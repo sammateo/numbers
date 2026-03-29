@@ -3,16 +3,18 @@ import { X, UserPlus } from "lucide-react";
 import { searchUserProfiles } from "#/server/account/getUserProfile";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import type { FullBibleStudyCollaborator } from "#/types";
+import type { CollaboratorRole, FullBibleStudyCollaborator } from "#/types";
 
 interface CollaboratorInputProps {
   collaborators: FullBibleStudyCollaborator[];
   onChange: (collaborators: FullBibleStudyCollaborator[]) => void;
+  collaboratorInputRole: CollaboratorRole;
 }
 
 export function CollaboratorInput({
   collaborators,
   onChange,
+  collaboratorInputRole,
 }: CollaboratorInputProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -84,7 +86,7 @@ export function CollaboratorInput({
                     id: "",
                     study_id: "",
                     user_id: user.id,
-                    role: "viewer",
+                    role: collaboratorInputRole,
                     created_at: "",
                   })
                 }
@@ -108,28 +110,32 @@ export function CollaboratorInput({
         )}
       </div>
 
-      {collaborators.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {collaborators.map((collab) => (
-            <div
-              key={collab.user.username}
-              className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-full"
-            >
-              <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center text-accent-foreground text-xs">
-                {collab.user.username.charAt(0)}
-              </div>
-              <span className="text-sm">@{collab.user.username}</span>
-              <button
-                type="button"
-                onClick={() => removeCollaborator(collab.user.username)}
-                className="p-0.5 hover:bg-background rounded-full transition-colors"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+      {collaborators &&
+        collaborators.filter((c) => c.role === collaboratorInputRole).length >
+          0 && (
+          <div className="flex flex-wrap gap-2">
+            {collaborators
+              .filter((c) => c.role === collaboratorInputRole)
+              .map((collab) => (
+                <div
+                  key={collab.user.username}
+                  className="flex items-center gap-2 px-3 py-1.5 bg-secondary rounded-full"
+                >
+                  <div className="w-5 h-5 rounded-full bg-accent flex items-center justify-center text-accent-foreground text-xs">
+                    {collab.user.username.charAt(0)}
+                  </div>
+                  <span className="text-sm">@{collab.user.username}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeCollaborator(collab.user.username)}
+                    className="p-0.5 hover:bg-background rounded-full transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+          </div>
+        )}
     </div>
   );
 }

@@ -29,7 +29,7 @@ export function CreateStudyPage({
   const navigate = useNavigate();
 
   // store
-  const { isAuthenticated } = useRouteContext({ from: "__root__" });
+  const { isAuthenticated, user } = useRouteContext({ from: "__root__" });
   const content = useCreateBibleStudyStore((s) => s.content);
   const setContent = useCreateBibleStudyStore((s) => s.setContent);
   const title = useCreateBibleStudyStore((s) => s.title);
@@ -47,6 +47,9 @@ export function CreateStudyPage({
 
   const visibility = useCreateBibleStudyStore((s) => s.visibility);
   const setVisibility = useCreateBibleStudyStore((s) => s.setVisibility);
+
+  const creator = useCreateBibleStudyStore((s) => s.creator);
+
   const reset = useCreateBibleStudyStore((s) => s.reset);
 
   useEffect(() => {
@@ -154,22 +157,25 @@ export function CreateStudyPage({
           }),
         });
 
-        //clear collaborators
-        await clearBibleStudyCollaborators({
-          data: {
-            study_id: study_id || "",
-          },
-        });
-        //add collaborators
-        await addBibleStudyCollaborators({
-          data: collaborators.map((collaborator) => {
-            return {
+        // collaborators should only be allowed to manage the study details and the verses
+        if (creator.id === user?.id) {
+          //clear collaborators
+          await clearBibleStudyCollaborators({
+            data: {
               study_id: study_id || "",
-              user_id: collaborator.user.id,
-              role: collaborator.role,
-            };
-          }),
-        });
+            },
+          });
+          //add collaborators
+          await addBibleStudyCollaborators({
+            data: collaborators.map((collaborator) => {
+              return {
+                study_id: study_id || "",
+                user_id: collaborator.user.id,
+                role: collaborator.role,
+              };
+            }),
+          });
+        }
       }
       setPublishing(false);
       reset();
@@ -200,7 +206,7 @@ export function CreateStudyPage({
       value: "shared" as const,
       icon: Users,
       label: "Shared",
-      description: "Collaborators only",
+      description: "Collaborators and viewers only",
     },
     {
       value: "public" as const,
@@ -225,15 +231,16 @@ export function CreateStudyPage({
         <div className="space-y-4 md:space-y-6 bg-card border border-border rounded-lg p-4 md:p-6">
           <div className="space-y-2">
             <label htmlFor="title" className="block text-sm">
-              Study Title
+              Study Title <span className="text-destructive">*</span>
             </label>
             <input
               id="title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              disabled={type === "edit" && creator.id !== user?.id}
               placeholder="Enter a descriptive title for your study"
-              className="w-full px-4 py-2.5 md:py-3 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full px-4 py-2.5 md:py-3 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:cursor-not-allowed"
             />
           </div>
 
@@ -246,28 +253,32 @@ export function CreateStudyPage({
               type="text"
               value={topic || ""}
               onChange={(e) => setTopic(e.target.value)}
+              disabled={type === "edit" && creator.id !== user?.id}
               placeholder="e.g., Sermon on the Mount, Psalms, Prayer"
-              className="w-full px-4 py-2.5 md:py-3 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full px-4 py-2.5 md:py-3 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:bg-muted disabled:cursor-not-allowed"
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="description" className="block text-sm">
-              Description
+              Description <span className="text-destructive">*</span>
             </label>
             <textarea
               id="description"
               value={description || ""}
               onChange={(e) => setDescription(e.target.value)}
+              disabled={type === "edit" && creator.id !== user?.id}
               placeholder="Brief overview of what this study covers"
               rows={3}
-              className="w-full px-4 py-2.5 md:py-3 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+              className="w-full px-4 py-2.5 md:py-3 text-sm md:text-base bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none disabled:bg-muted disabled:cursor-not-allowed"
             />
           </div>
         </div>
 
         <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
-          <h3 className="text-base md:text-lg">Study Content</h3>
+          <h3 className="text-base md:text-lg">
+            Study Content <span className="text-destructive">*</span>
+          </h3>
           <BibleStudyContentEditor
             disabled={!isAuthenticated}
             content={content}
@@ -291,55 +302,74 @@ export function CreateStudyPage({
           <MediaInput media={media} onChange={setMedia} />
         </div> */}
 
-        {visibility !== "private" && (
+        {/* only show when visibility is not private for the creator, do not show for any other users */}
+        {visibility !== "private" &&
+          !(type === "edit" && creator.id !== user?.id) && (
+            <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
+              <h3 className="text-base md:text-lg">Viewers</h3>
+              <p className="text-sm text-muted-foreground">
+                Invite others to view to this study
+              </p>
+              <CollaboratorInput
+                collaborators={collaborators}
+                onChange={setCollaborators}
+                collaboratorInputRole="viewer"
+              />
+            </div>
+          )}
+        {visibility !== "private" &&
+          !(type === "edit" && creator.id !== user?.id) && (
+            <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
+              <h3 className="text-base md:text-lg">Collaborators</h3>
+              <p className="text-sm text-muted-foreground">
+                Invite others to colloaborate on this study
+              </p>
+              <CollaboratorInput
+                collaborators={collaborators}
+                onChange={setCollaborators}
+                collaboratorInputRole="editor"
+              />
+            </div>
+          )}
+
+        {(type === "new" || (type === "edit" && creator.id === user?.id)) && (
           <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
-            <h3 className="text-base md:text-lg">Viewers</h3>
-            <p className="text-sm text-muted-foreground">
-              Invite others to view to this study
-            </p>
-            <CollaboratorInput
-              collaborators={collaborators}
-              onChange={setCollaborators}
-            />
+            <h3 className="text-base md:text-lg">Visibility</h3>
+            {/* <p className="text-muted-foreground text-xs">
+              * feature still under construction (all bible studies will be
+              treated as private until feature is completed)
+            </p> */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {visibilityOptions
+                .filter((option) => option.value !== "public")
+                .map((option) => {
+                  const Icon = option.icon;
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setVisibility(option.value)}
+                      className={`p-4 border-2 rounded-lg transition-all text-left ${
+                        visibility === option.value
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      <Icon
+                        className={`w-5 h-5 mb-2 ${visibility === option.value ? "text-primary" : "text-muted-foreground"}`}
+                      />
+                      <div className="font-medium text-sm md:text-base">
+                        {option.label}
+                      </div>
+                      <div className="text-xs md:text-sm text-muted-foreground">
+                        {option.description}
+                      </div>
+                    </button>
+                  );
+                })}
+            </div>
           </div>
         )}
-
-        <div className="space-y-3 bg-card border border-border rounded-lg p-4 md:p-6">
-          <h3 className="text-base md:text-lg">Visibility</h3>
-          <p className="text-muted-foreground text-xs">
-            * feature still under construction (all bible studies will be
-            treated as private until feature is completed)
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {visibilityOptions
-              .filter((option) => option.value !== "public")
-              .map((option) => {
-                const Icon = option.icon;
-                return (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setVisibility(option.value)}
-                    className={`p-4 border-2 rounded-lg transition-all text-left ${
-                      visibility === option.value
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <Icon
-                      className={`w-5 h-5 mb-2 ${visibility === option.value ? "text-primary" : "text-muted-foreground"}`}
-                    />
-                    <div className="font-medium text-sm md:text-base">
-                      {option.label}
-                    </div>
-                    <div className="text-xs md:text-sm text-muted-foreground">
-                      {option.description}
-                    </div>
-                  </button>
-                );
-              })}
-          </div>
-        </div>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
           {/* <button

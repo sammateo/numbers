@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Plus } from "lucide-react";
+import { X, Plus, LoaderCircleIcon } from "lucide-react";
 import type { BibleStudyVerse } from "#/types";
 import { BIBLE_VERSIONS } from "#/data/bible/bible_versions";
 import { useServerFn } from "@tanstack/react-start";
@@ -32,7 +32,11 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
   });
 
   const getPassageTrigger = useServerFn(getScripture);
-  const { data: fetchedPassage } = useQuery({
+  const {
+    data: fetchedPassage,
+    isPending: fetchingPassage,
+    isEnabled: fetchingPassageEnabled,
+  } = useQuery({
     queryKey: [
       "passage",
       {
@@ -159,7 +163,7 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
     <div className="space-y-4">
       <div className="space-y-3">
         {/* Scripture Reference Selectors */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 items-center gap-3">
           <select
             value={selectedVersion}
             onChange={(e) => handleVersionChange(e.target.value)}
@@ -229,6 +233,9 @@ export function VerseInput({ verses, onChange }: VerseInputProps) {
                 </option>
               ))}
           </select>
+          {fetchingPassageEnabled && fetchingPassage && (
+            <LoaderCircleIcon className="animate-spin" />
+          )}
         </div>
 
         {/* Current Reference Preview */}

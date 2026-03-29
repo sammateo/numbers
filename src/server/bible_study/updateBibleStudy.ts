@@ -1,4 +1,3 @@
-import { getUserSessionFn } from "#/auth/supabase";
 import { getSupabaseServerClient } from "#/lib/supabase";
 import type { BibleStudyUpdate } from "#/types";
 import { createServerFn } from "@tanstack/react-start";
@@ -13,7 +12,7 @@ export const updateBibleStudy = createServerFn({ method: "POST" })
   .inputValidator(UpdateBibleStudySchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient();
-    const { user } = await getUserSessionFn();
+
     const updateObject: BibleStudyUpdate = {
       title: data.title,
       topic: data.topic,
@@ -25,7 +24,6 @@ export const updateBibleStudy = createServerFn({ method: "POST" })
       .schema("numbers")
       .from("bible_studies")
       .update(updateObject)
-      .eq("creator_id", user.id)
       .eq("id", data.id)
       .select();
     if (error) {

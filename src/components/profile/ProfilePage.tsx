@@ -9,11 +9,12 @@ import { IoBookOutline } from "react-icons/io5";
 import NewCard from "../study/NewCard";
 import { Edit, SquareArrowOutUpRight } from "lucide-react";
 import Button from "#/ui/button/Button";
+import NoBibleStudies from "../study/NoBibleStudies";
 
 const ProfilePage = () => {
   const { profile } = useRouteContext({ from: "__root__" });
   const routeApi = getRouteApi("/_authed/profile");
-  const bibleStudies = routeApi.useLoaderData();
+  const { myStudies: bibleStudies, sharedStudies } = routeApi.useLoaderData();
   if (!profile) {
     throw redirect({ to: "/onboarding" });
   }
@@ -62,7 +63,7 @@ const ProfilePage = () => {
       </div>
 
       <section className="space-y-4">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <h2 className="text-xl md:text-2xl">Recently Created Studies</h2>
           <Link to="/study">
             <Button variant="secondary" className="flex gap-2 items-center">
@@ -72,20 +73,43 @@ const ProfilePage = () => {
           </Link>
         </div>
         <div className="grid gap-4 md:gap-5">
-          {bibleStudies &&
+          {bibleStudies && bibleStudies.length > 0 ? (
             bibleStudies
               .slice(0, 3)
-              .map((study) => <NewCard key={study.id} {...study} />)}
+              .map((study) => <NewCard key={study.id} {...study} />)
+          ) : (
+            <div>
+              <p className="text-pretty text-muted-foreground text-center">
+                No bible studies found
+              </p>
+            </div>
+          )}
         </div>
       </section>
-      {/* <section className="space-y-4">
-        <h2 className="text-xl md:text-2xl">Collaborative Studies</h2>
-        <div className="grid gap-4 md:gap-5">
-          {sharedStudies.map((study) => (
-            <NewCard key={study.id} {...study} />
-          ))}
+      <section className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl md:text-2xl">Collaborative Studies</h2>
+          <Link to="/shared">
+            <Button variant="secondary" className="flex gap-2 items-center">
+              <span>View More</span>
+              <SquareArrowOutUpRight className="size-4" />
+            </Button>
+          </Link>
         </div>
-      </section> */}
+        <div className="grid gap-4 md:gap-5">
+          {sharedStudies && sharedStudies.length > 0 ? (
+            sharedStudies
+              .slice(0, 3)
+              .map((study) => <NewCard key={study.id} {...study} />)
+          ) : (
+            <div>
+              <p className="text-pretty text-muted-foreground text-center">
+                No shared studies found
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   );
 };
