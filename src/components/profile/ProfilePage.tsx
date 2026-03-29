@@ -9,7 +9,6 @@ import { IoBookOutline } from "react-icons/io5";
 import NewCard from "../study/NewCard";
 import { Edit, SquareArrowOutUpRight } from "lucide-react";
 import Button from "#/ui/button/Button";
-import NoBibleStudies from "../study/NoBibleStudies";
 
 const ProfilePage = () => {
   const { profile } = useRouteContext({ from: "__root__" });

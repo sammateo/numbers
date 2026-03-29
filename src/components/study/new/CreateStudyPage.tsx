@@ -1,11 +1,7 @@
 import { createBibleStudy } from "#/server/bible_study/createBibleStudy";
 import { useCreateBibleStudyStore } from "#/store/useCreateBibleStudyStore";
 import Button from "#/ui/button/Button";
-import {
-  useLoaderData,
-  useNavigate,
-  useRouteContext,
-} from "@tanstack/react-router";
+import { useNavigate, useRouteContext } from "@tanstack/react-router";
 import { Globe, LoaderCircle, Lock, Send, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import BibleStudyContentEditor from "./BibleStudyContentEditor";
@@ -61,16 +57,7 @@ export function CreateStudyPage({
   // allow user to publish study
   const enablePublish = title && description && content && !publishing;
 
-  // const [verses, setVerses] = useState<any[]>([]);
   const [media, setMedia] = useState<any[]>([]);
-  // const [visibility, setVisibility] = useState<"private" | "shared" | "public">(
-  //   "private",
-  // );
-
-  // if (type === "edit") {
-  //   const data = useLoaderData({ from: "/_authed/study/edit/$studyId" });
-  //   setTitle(data?.title || "");
-  // }
 
   //mutations
 
