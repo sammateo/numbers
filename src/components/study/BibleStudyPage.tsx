@@ -42,12 +42,14 @@ const BibleStudyPage = () => {
   const navigate = useNavigate();
   const { user } = useRouteContext({ from: "__root__" });
   const VisibilityIcon = visibilityIcons[bibleStudy?.visibility || "private"];
-
+  if (!bibleStudy) {
+    navigate({ to: "/study" });
+  }
   return (
     <div className="lg:max-w-5xl pt-4 mx-auto flex flex-col items-stretch gap-5">
       <Link
         to="/study"
-        className="inline-flex items-center gap-2 text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors mb-4 md:mb-6"
+        className="w-fit inline-flex items-center gap-2 text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors mb-4 md:mb-6"
       >
         <FaArrowLeftLong />
         Back to studies
@@ -75,13 +77,43 @@ const BibleStudyPage = () => {
           </Link>
 
           {bibleStudy?.collaborators &&
-            bibleStudy?.collaborators.length > 0 && (
+            bibleStudy?.collaborators.filter((c) => c.role === "editor")
+              .length > 0 && (
               <>
                 <span className="hidden sm:inline">•</span>
                 <div className="flex items-center gap-2">
                   <LuUsers className="w-4 h-4" />
                   <span className="text-sm md:text-base">
-                    {bibleStudy?.collaborators.length} collaborators
+                    {
+                      bibleStudy?.collaborators.filter(
+                        (c) => c.role === "editor",
+                      ).length
+                    }{" "}
+                    collaborator
+                    {bibleStudy?.collaborators.filter(
+                      (c) => c.role === "editor",
+                    ).length > 1 && "s"}
+                  </span>
+                </div>
+              </>
+            )}
+          {bibleStudy?.collaborators &&
+            bibleStudy?.collaborators.filter((c) => c.role === "viewer")
+              .length > 0 && (
+              <>
+                <span className="hidden sm:inline">•</span>
+                <div className="flex items-center gap-2">
+                  <LuUsers className="w-4 h-4" />
+                  <span className="text-sm md:text-base">
+                    {
+                      bibleStudy?.collaborators.filter(
+                        (c) => c.role === "viewer",
+                      ).length
+                    }{" "}
+                    viewer
+                    {bibleStudy?.collaborators.filter(
+                      (c) => c.role === "viewer",
+                    ).length > 1 && "s"}
                   </span>
                 </div>
               </>
@@ -105,28 +137,60 @@ const BibleStudyPage = () => {
           </div>
         </div>
 
-        {bibleStudy?.collaborators && bibleStudy?.collaborators.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            <span className="text-xs md:text-sm text-muted-foreground">
-              Collaborators:
-            </span>
-            {bibleStudy?.collaborators.map((collab) => (
-              <Link
-                key={collab.id}
-                to="/study"
-                // to={`/profile/${collab.user.username}`}
-                className="flex items-center gap-1.5 px-2 py-1 bg-secondary rounded-full hover:bg-muted transition-colors"
-              >
-                <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-accent flex items-center justify-center text-accent-foreground text-xs">
-                  {collab.user.username.charAt(0)}
-                </div>
-                <span className="text-xs md:text-sm">
-                  @{collab.user.username}
-                </span>
-              </Link>
-            ))}
-          </div>
-        )}
+        {bibleStudy?.collaborators &&
+          bibleStudy?.collaborators.filter((c) => c.role === "editor").length >
+            0 && (
+            <div className="flex flex-wrap items-center gap-2 pt-2">
+              <span className="text-xs md:text-sm text-muted-foreground">
+                Collaborators:
+              </span>
+              {bibleStudy?.collaborators
+                .filter((c) => c.role === "editor")
+                .map((collab) => (
+                  <Link
+                    key={collab.id}
+                    to="/study/$studyId"
+                    params={{ studyId: bibleStudy.id }}
+                    // to={`/profile/${collab.user.username}`}
+                    className="flex items-center gap-1.5 px-2 py-1 bg-secondary rounded-full hover:bg-muted transition-colors"
+                  >
+                    <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-accent flex items-center justify-center text-accent-foreground text-xs">
+                      {collab.user.username.charAt(0)}
+                    </div>
+                    <span className="text-xs md:text-sm">
+                      @{collab.user.username}
+                    </span>
+                  </Link>
+                ))}
+            </div>
+          )}
+        {bibleStudy?.collaborators &&
+          bibleStudy?.collaborators.filter((c) => c.role === "viewer").length >
+            0 && (
+            <div className="flex flex-wrap items-center gap-2 pt-2">
+              <span className="text-xs md:text-sm text-muted-foreground">
+                Viewers:
+              </span>
+              {bibleStudy?.collaborators
+                .filter((c) => c.role === "viewer")
+                .map((collab) => (
+                  <Link
+                    key={collab.id}
+                    to="/study/$studyId"
+                    params={{ studyId: bibleStudy.id }}
+                    // to={`/profile/${collab.user.username}`}
+                    className="flex items-center gap-1.5 px-2 py-1 bg-secondary rounded-full hover:bg-muted transition-colors"
+                  >
+                    <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-accent flex items-center justify-center text-accent-foreground text-xs">
+                      {collab.user.username.charAt(0)}
+                    </div>
+                    <span className="text-xs md:text-sm">
+                      @{collab.user.username}
+                    </span>
+                  </Link>
+                ))}
+            </div>
+          )}
       </header>
       <BibleStudyContentEditor
         disabled={true}
@@ -154,8 +218,9 @@ const BibleStudyPage = () => {
         </section>
       )}
 
-      {bibleStudy?.creator_id === user?.id && (
-        <div className="flex flex-col sm:flex-row gap-2 justify-center">
+      <div className="flex flex-col sm:flex-row gap-2 justify-center">
+        {(bibleStudy?.creator_id === user?.id ||
+          bibleStudy?.collaborators.filter((c) => c.user.id === user?.id)) && (
           <Button
             className="w-full sm:w-auto flex gap-2 items-center"
             onClick={async () => {
@@ -169,6 +234,9 @@ const BibleStudyPage = () => {
           >
             <span>Edit Study</span>
           </Button>
+        )}
+
+        {bibleStudy?.creator_id === user?.id && (
           <Button
             disabled={deleting}
             variant="destructive"
@@ -195,8 +263,8 @@ const BibleStudyPage = () => {
             {deleting && <LoaderCircle className="animate-spin size-5" />}
             <span>Delete Study</span>
           </Button>
-        </div>
-      )}
+        )}
+      </div>
       {/* <Link
           to="/study"
           className="inline-flex items-center gap-2 text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors mb-4 md:mb-6"

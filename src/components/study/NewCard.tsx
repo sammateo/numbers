@@ -48,15 +48,20 @@ const NewCard = ({
                 {creator.username.charAt(0)}
               </div>
               <span className="truncate">@{creator.username}</span>
-              {collaborators && collaborators.length > 0 && (
-                <>
-                  <span className="hidden sm:inline">•</span>
-                  <span className="hidden sm:inline">
-                    {collaborators.length} collaborator
-                    {collaborators.length > 1 ? "s" : ""}
-                  </span>
-                </>
-              )}
+              {collaborators &&
+                collaborators.filter((c) => c.role === "editor").length > 0 && (
+                  <>
+                    <span className="hidden sm:inline">•</span>
+                    <span className="hidden sm:inline">
+                      {collaborators.filter((c) => c.role === "editor").length}{" "}
+                      collaborator
+                      {collaborators.filter((c) => c.role === "editor").length >
+                      1
+                        ? "s"
+                        : ""}
+                    </span>
+                  </>
+                )}
             </div>
             <div className="text-xs md:text-sm text-muted-foreground">
               {new Date(created_at).toDateString()}{" "}

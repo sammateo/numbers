@@ -4,6 +4,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FaHome } from "react-icons/fa";
 import { FiPlusCircle, FiBookOpen } from "react-icons/fi";
 import { BsPerson } from "react-icons/bs";
+import { LuUsers } from "react-icons/lu";
 const SideBar = () => {
   const open = useNavigationBarStore((s) => s.open);
   const setOpen = useNavigationBarStore((s) => s.setOpen);
@@ -29,12 +30,12 @@ const SideBar = () => {
       path: "/study",
       auth: true,
     },
-    // {
-    //   icon: RiUserShared2Line,
-    //   label: "Shared with Me",
-    //   path: "/study",
-    //   auth: true,
-    // },
+    {
+      icon: LuUsers,
+      label: "Shared with Me",
+      path: "/shared",
+      auth: true,
+    },
     {
       icon: BsPerson,
       label: "Profile",

@@ -4,11 +4,6 @@ import type { ProfileUpdate } from "#/types";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-export const getServerTime = createServerFn().handler(async () => {
-  // This runs only on the server
-  return new Date().toISOString();
-});
-
 const ProfileSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
@@ -38,6 +33,3 @@ export const submitProfile = createServerFn()
     }
     return `Updated user: ${data.username}`;
   });
-
-// // Call from anywhere - components, loaders, hooks, etc.
-// const time = await getServerTime()

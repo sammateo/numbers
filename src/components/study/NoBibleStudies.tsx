@@ -1,6 +1,41 @@
 import ButtonLink from "#/ui/button/ButtonLink";
 
-const NoBibleStudies = () => {
+const NoBibleStudies = ({
+  type = "default",
+}: {
+  type?: "default" | "shared";
+}) => {
+  const noBibleStudiesCopy = {
+    heading: {
+      default: "Hmm, nothing found",
+      shared: "Hmm, nothing found",
+    },
+    subtext: {
+      default:
+        "It seems like you do not have any Bible studies as yet. Get started by creating one",
+      shared: "Bible studies shared with you will appear here",
+    },
+    primaryButton: {
+      text: {
+        default: "New Bible Study",
+        shared: "New Bible Study",
+      },
+      link: {
+        default: "/study/new",
+        shared: "/study/new",
+      },
+    },
+    secondaryButton: {
+      text: {
+        default: "Home",
+        shared: "Home",
+      },
+      link: {
+        default: "/",
+        shared: "/",
+      },
+    },
+  };
   return (
     <div className="max-w-md text-center mx-auto">
       <svg
@@ -19,24 +54,23 @@ const NoBibleStudies = () => {
       </svg>
 
       <h2 className="mt-6 text-2xl font-bold text-primary">
-        Hmm, nothing found
+        {noBibleStudiesCopy.heading[type]}
       </h2>
 
       <p className="mt-4 text-pretty text-muted-foreground">
-        It seems like you do not have any Bible studies as yet. Get started by
-        creating one
+        {noBibleStudiesCopy.subtext[type]}
       </p>
 
       <div className="mt-6 space-y-2">
         <ButtonLink
           className="w-full block"
-          to="/study/new"
-          label="New Bible Study"
+          to={noBibleStudiesCopy.primaryButton.link[type]}
+          label={noBibleStudiesCopy.primaryButton.text[type]}
         />
         <ButtonLink
           className="w-full block border border-primary"
-          to="/"
-          label="Home"
+          to={noBibleStudiesCopy.secondaryButton.link[type]}
+          label={noBibleStudiesCopy.secondaryButton.text[type]}
           variant="secondary"
         />
       </div>

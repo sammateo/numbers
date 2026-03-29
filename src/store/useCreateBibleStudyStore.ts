@@ -1,6 +1,8 @@
 import type {
   BibleStudyVerse,
   FullBibleStudy,
+  FullBibleStudyCollaborator,
+  Profile,
   RichTextContent,
   StudyVisibility,
 } from "#/types";
@@ -11,7 +13,9 @@ type CreateBibleStudyState = FullBibleStudy & {
   setDescription: (description: string) => void;
   setContent: (content: RichTextContent | null) => void;
   setVerses: (verses: BibleStudyVerse[]) => void;
+  setCollaborators: (collaborators: FullBibleStudyCollaborator[]) => void;
   setVisibility: (visibility: StudyVisibility) => void;
+  setCreator: (creator: Profile) => void;
   reset: () => void;
 };
 
@@ -43,7 +47,9 @@ export const useCreateBibleStudyStore = create<CreateBibleStudyState>(
     setDescription: (description) => set({ description }),
     setContent: (content) => set({ content }),
     setVerses: (verses) => set({ verses }),
+    setCollaborators: (collaborators) => set({ collaborators }),
     setVisibility: (visibility) => set({ visibility }),
+    setCreator: (creator) => set({ creator }),
     reset: () =>
       set({
         id: "",
@@ -56,6 +62,17 @@ export const useCreateBibleStudyStore = create<CreateBibleStudyState>(
         created_at: "",
         updated_at: "",
         verses: [],
+        collaborators: [],
+        media: [],
+        creator: {
+          id: "",
+          first_name: null,
+          last_name: null,
+          username: "",
+          avatar_url: null,
+          created_at: "",
+          updated_at: "",
+        },
       }),
   }),
 );
