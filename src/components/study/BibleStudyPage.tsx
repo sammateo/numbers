@@ -48,11 +48,12 @@ const BibleStudyPage = () => {
   return (
     <div className="lg:max-w-5xl pt-4 mx-auto flex flex-col items-stretch gap-5">
       <Link
-        to="/study"
+        to={bibleStudy?.creator.id === user?.id ? "/study" : "/shared"}
         className="w-fit inline-flex items-center gap-2 text-sm md:text-base text-muted-foreground hover:text-foreground transition-colors mb-4 md:mb-6"
       >
         <FaArrowLeftLong />
-        Back to studies
+        Back to{" "}
+        {bibleStudy?.creator.id === user?.id ? "studies" : "shared studies"}
       </Link>
       <header className="space-y-2">
         {bibleStudy?.topic && (
@@ -220,7 +221,12 @@ const BibleStudyPage = () => {
 
       <div className="flex flex-col sm:flex-row gap-2 justify-center">
         {(bibleStudy?.creator_id === user?.id ||
-          bibleStudy?.collaborators.filter((c) => c.user.id === user?.id)) && (
+          (bibleStudy?.collaborators.filter(
+            (c) => c.user.id === user?.id && c.role === "editor",
+          ) &&
+            bibleStudy?.collaborators.filter(
+              (c) => c.user.id === user?.id && c.role === "editor",
+            ).length > 0)) && (
           <Button
             className="w-full sm:w-auto flex gap-2 items-center"
             onClick={async () => {
